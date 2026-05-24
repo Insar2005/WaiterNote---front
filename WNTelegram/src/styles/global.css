@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Design tokens — pastel glassmorphism
+   These CSS variables are the single source of truth for the visual style.
+   Migrating components: replace hardcoded colors / shadows with var(--wn-...).
+   ========================================================================== */
+
+:root {
+  /* === Surfaces (glass) === */
+  /* Translucent layers used for cards, sheets, navbar. Combined with backdrop-filter. */
+  --wn-glass-light: rgba(255, 255, 255, 0.72);
+  --wn-glass-medium: rgba(255, 255, 255, 0.85);
+  --wn-glass-strong: rgba(255, 255, 255, 0.95);
+
+  /* Border that simulates a glass edge */
+  --wn-glass-border: rgba(255, 255, 255, 0.4);
+  --wn-glass-border-subtle: rgba(0, 0, 0, 0.06);
+
+  /* === Pastel palette === */
+  /* Each color comes in three shades: bg (very light fill), main, ink (dark text) */
+  --wn-mint-bg: #e8f5ec;
+  --wn-mint: #a8d5b4;
+  --wn-mint-ink: #2e7d32;
+
+  --wn-peach-bg: #fff0e6;
+  --wn-peach: #f4c4a3;
+  --wn-peach-ink: #c25e1a;
+
+  --wn-rose-bg: #fde8e8;
+  --wn-rose: #f5b8b8;
+  --wn-rose-ink: #c62828;
+
+  --wn-sky-bg: #e6f0fa;
+  --wn-sky: #b6d4ec;
+  --wn-sky-ink: #1565c0;
+
+  --wn-lavender-bg: #f0ecf6;
+  --wn-lavender: #c9beda;
+  --wn-lavender-ink: #6a4190;
+
+  --wn-sand-bg: #faf6f0;
+  --wn-sand: #e8dcc4;
+  --wn-sand-ink: #8b6f3d;
+
+  /* === Text === */
+  --wn-ink: #1a1a1a;
+  --wn-ink-soft: #555;
+  --wn-ink-mute: #888;
+  --wn-ink-faint: #b0b0b0;
+
+  /* === Backgrounds === */
+  --wn-bg: #f5f5f7;            /* page background */
+  --wn-bg-elevated: #ffffff;   /* cards on top of bg */
+  --wn-bg-recessed: #ebebef;   /* inputs, slots */
+
+  /* === Accent (primary action) === */
+  /* The "main" green used across CTAs. Pastel-ish but readable. */
+  --wn-accent: #4caf50;
+  --wn-accent-soft: #a8d5b4;
+  --wn-accent-bg: #e8f5ec;
+  --wn-accent-ink: #2e7d32;
+
+  /* === Shadows === */
+  /* Soft, multi-layered. Use these instead of hand-rolled box-shadows. */
+  --wn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03);
+  --wn-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --wn-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --wn-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* === Radii === */
+  --wn-radius-sm: 8px;
+  --wn-radius-md: 12px;
+  --wn-radius-lg: 16px;
+  --wn-radius-xl: 22px;
+  --wn-radius-pill: 999px;
+
+  /* === Blur === */
+  --wn-blur-sm: 10px;
+  --wn-blur-md: 18px;
+  --wn-blur-lg: 30px;
+}
+
+/* ==========================================================================
+   Global resets and mobile-friendly defaults.
+   ========================================================================== */
+
+* {
+  /* Disable double-tap-to-zoom on all elements but keep normal scrolling
+     and pinch-zoom inside SVG canvases (where we have explicit control). */
+  touch-action: manipulation;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  /* Avoid iOS Safari's elastic overscroll bouncing the whole page —
+     individual scroll containers can override with overscroll-behavior: auto */
+  overscroll-behavior-y: none;
+  /* Prevent text size auto-adjustment on rotation (iOS quirk) */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Disable text selection by default (it's distracting in a tap-heavy UI).
+     Inputs, textareas, and explicitly-allowed elements can override. */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Restore selection where it makes sense */
+input, textarea, [contenteditable="true"], [data-selectable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Disable iOS tap highlight (gray flash on tap) — we have our own :active states */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Default focus ring — clean for accessibility but not ugly */
+:focus-visible {
+  outline: 2px solid #4caf50;
+  outline-offset: 2px;
+}
+
+button {
+  font-family: inherit;
+}
