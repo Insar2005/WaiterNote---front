@@ -100,6 +100,13 @@ function applyQueryEffects() {
 
   const tableId = route.query.highlight_table
   if (tableId) {
+    // Same hall-switching concern as show_order below: highlighting a
+    // table that's not in the active hall would otherwise pulse silently
+    // out of view.
+    const tableHallId = hall.tableById(tableId)?.hall_id
+    if (tableHallId && tableHallId !== hall.activeHallId) {
+      hall.setActiveHall(tableHallId)
+    }
     highlightTableId.value = tableId
     setTimeout(() => { highlightTableId.value = null }, 2000)
     nextTick(() => canvasRef.value?.centerOnTable(tableId))
@@ -111,7 +118,20 @@ function applyQueryEffects() {
     const o = order.orderById(orderId)
     if (o) {
       detailsOrder.value = o
+      // Switch to the hall that owns this order's table BEFORE centring.
+      // Without this the order would open visually in whatever hall is
+      // currently active, while the actual table (and its highlight) is
+      // in a different hall — looking like "wrong hall" to the user.
+      // Order.hall_id is the source of truth; fall back via the table
+      // lookup in case it's missing on an older record.
+      const targetHallId =
+        o.hall_id || (o.table_id ? hall.tableById(o.table_id)?.hall_id : null)
+      if (targetHallId && targetHallId !== hall.activeHallId) {
+        hall.setActiveHall(targetHallId)
+      }
       if (o.table_id) {
+        // nextTick so the hall switch (and its DOM update) lands first,
+        // then the canvas has the right tables to centre on.
         nextTick(() => canvasRef.value?.centerOnTable(o.table_id))
       }
     }
