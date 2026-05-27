@@ -83,6 +83,8 @@ import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import { useHallStore } from '@/stores/hall'
 import { useWorkplaceStore } from '@/stores/workplace'
 import { useUiStore } from '@/stores/ui'
+import { useOrderStore } from '@/stores/order'
+import { useShiftStore } from '@/stores/shift'
 import { newId } from '@/utils/nanoid'
 
 const props = defineProps({
@@ -93,6 +95,8 @@ const emit = defineEmits(['close', 'saved'])
 const hall = useHallStore()
 const workplace = useWorkplaceStore()
 const ui = useUiStore()
+const order = useOrderStore()
+const shift = useShiftStore()
 
 const isEdit = computed(() => !!props.initial)
 const busy = ref(false)
@@ -143,10 +147,33 @@ async function onSubmit() {
 }
 
 async function onDelete() {
-  const tableCount = hall.tablesOfHall(props.initial.id).length
-  const message = tableCount
-    ? `В зале ${tableCount} столов — они тоже будут удалены.`
-    : 'Зал пустой.'
+  const tables = hall.tablesOfHall(props.initial.id)
+  const tableCount = tables.length
+
+  // If a shift is open, count how many of this hall's tables carry an
+  // active (unpaid) order. Those orders aren't deleted with the hall —
+  // the backend nulls table_id and they stay in the shift, but lose
+  // their table attachment and need manual reassignment.
+  let activeOrdersCount = 0
+  if (shift.isOpen && tableCount > 0) {
+    for (const t of tables) {
+      if (order.orderByTable(t.id)) activeOrdersCount += 1
+    }
+  }
+
+  let message
+  if (tableCount === 0) {
+    message = 'Зал пустой.'
+  } else if (activeOrdersCount > 0) {
+    message =
+      `В зале ${tableCount} столов, на ${activeOrdersCount} из них ` +
+      `есть незакрытые заказы. Столы будут удалены, а заказы ` +
+      `останутся в смене без привязки к столам — их нужно будет ` +
+      `переназначить вручную.`
+  } else {
+    message = `В зале ${tableCount} столов — они тоже будут удалены.`
+  }
+
   const ok = await ui.confirm({
     title: 'Удалить зал?',
     message,

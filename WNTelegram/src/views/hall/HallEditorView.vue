@@ -24,19 +24,8 @@
       </div>
     </header>
 
-    <!-- Block editing if there's an open shift -->
-    <div v-if="shift.isOpen" class="locked-banner">
-      <span>🔒</span>
-      <div>
-        <strong>Редактирование заблокировано</strong>
-        <p class="locked-text">
-          У вас открыта смена. Закройте её, чтобы изменить карту.
-        </p>
-      </div>
-    </div>
-
     <!-- No workplace -->
-    <div v-else-if="!workplace.currentId" class="empty-screen">
+    <div v-if="!workplace.currentId" class="empty-screen">
       <p>Выберите заведение в Профиле</p>
     </div>
 
@@ -55,6 +44,19 @@
           </button>
           <button class="hall-tab hall-tab--add" @click="openHallCreate">+ Зал</button>
         </div>
+        <!-- Layout templates: temporarily disabled until backend support
+             (routers/layouts.py, services/layouts.py) is restored. -->
+        <!--
+        <button
+          v-if="hall.activeHall"
+          class="hall-edit-btn"
+          @click="openLayouts"
+          aria-label="Шаблоны расстановки"
+          title="Шаблоны расстановки"
+        >
+          📋
+        </button>
+        -->
         <button
           v-if="hall.activeHall"
           class="hall-edit-btn"
@@ -114,6 +116,15 @@
       @delete="onDeleteFromPanel"
       @duplicate="onDuplicateFromPanel"
     />
+
+    <!-- Saved table arrangements (templates) — disabled until backend
+         layouts router is restored.
+    <HallLayoutsPanel
+      :visible="layoutsPanelVisible"
+      @close="layoutsPanelVisible = false"
+      @applied="onLayoutApplied"
+    />
+    -->
   </div>
 </template>
 
@@ -122,6 +133,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWorkplaceStore } from '@/stores/workplace'
 import { useShiftStore } from '@/stores/shift'
+import { useOrderStore } from '@/stores/order'
 import { useHallStore } from '@/stores/hall'
 import { useUiStore } from '@/stores/ui'
 import { useUndoStack } from '@/composables/useUndoStack'
@@ -129,10 +141,12 @@ import { newId } from '@/utils/nanoid'
 import HallEditorCanvas from './HallEditorCanvas.vue'
 import HallFormModal from './HallFormModal.vue'
 import TableEditPanel from './TableEditPanel.vue'
+// import HallLayoutsPanel from './HallLayoutsPanel.vue' // disabled until backend layouts router is restored
 
 const router = useRouter()
 const workplace = useWorkplaceStore()
 const shift = useShiftStore()
+const order = useOrderStore()
 const hall = useHallStore()
 const ui = useUiStore()
 const undoStack = useUndoStack({ limit: 50 })
@@ -148,6 +162,11 @@ const editingTablePanel = computed(() =>
 
 const hallFormVisible = ref(false)
 const editingHall = ref(null)
+
+// Layouts (templates) panel — disabled until backend support is restored.
+// Keeping the ref/handlers commented (not deleted) so it's a one-line
+// flip when routers/layouts.py comes back.
+// const layoutsPanelVisible = ref(false)
 
 /**
  * Id of the table that was just created, used to draw a pulsing highlight
@@ -177,6 +196,36 @@ function closeHallForm() {
   hallFormVisible.value = false
   editingHall.value = null
 }
+
+// === Layouts (templates) ===
+// Disabled together with the panel above. Keep the implementation here
+// (commented) so re-enabling is a one-block uncomment when the backend
+// layouts router is restored.
+/*
+async function openLayouts() {
+  if (!hall.activeHallId) return
+  layoutsPanelVisible.value = true
+  try {
+    await hall.fetchLayouts(hall.activeHallId)
+  } catch (e) {
+    ui.toastError(e.message)
+  }
+}
+
+function onLayoutApplied({ moved, created }) {
+  const all = [...(moved || []), ...(created || [])]
+  if (all.length === 0) return
+  // Pulse the first changed table specifically (only one ring at a time)
+  // and center on it so the user sees the action took effect.
+  const firstId = all[0]
+  nextTick(() => canvasRef.value?.centerOnTable(firstId))
+  pulseTableId.value = firstId
+  clearTimeout(pulseTimer)
+  pulseTimer = setTimeout(() => {
+    if (pulseTableId.value === firstId) pulseTableId.value = null
+  }, 2000)
+}
+*/
 
 // === Table creation ===
 /**
@@ -317,6 +366,32 @@ function onCloseEditPanel() {
 
 async function onDeleteFromPanel(tableId, snapshot) {
   editingTableId.value = null
+
+  // If a shift is open and this table has an active (unpaid) order on it,
+  // warn the user: removing the table doesn't delete the order — the
+  // backend nulls table_id (ON DELETE SET NULL), so the order is kept
+  // but becomes "detached" and has to be reassigned manually later.
+  if (shift.isOpen) {
+    const activeOrder = order.orderByTable(tableId)
+    if (activeOrder) {
+      const ok = await ui.confirm({
+        title: 'Удалить стол с активным заказом?',
+        message:
+          'На этом столе есть незакрытый заказ. Если удалить стол, ' +
+          'заказ останется в смене, но без привязки к столу — ' +
+          'его нужно будет переназначить вручную.',
+        confirmText: 'Удалить',
+        cancelText: 'Отмена',
+        danger: true,
+      })
+      if (!ok) {
+        // Re-open the edit panel so the user lands back where they were.
+        editingTableId.value = tableId
+        return
+      }
+    }
+  }
+
   try {
     await hall.removeTable(tableId)
     undoStack.push({
@@ -510,28 +585,6 @@ onUnmounted(() => {
 .icon-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
-}
-
-.locked-banner {
-  margin: 16px;
-  padding: 14px 16px;
-  background-color: #fff8e1;
-  border: 1px solid #ffe082;
-  border-radius: 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 14px;
-}
-
-.locked-banner strong {
-  color: #1a1a1a;
-}
-
-.locked-text {
-  margin: 4px 0 0 0;
-  font-size: 13px;
-  color: #666;
 }
 
 .halls-bar {

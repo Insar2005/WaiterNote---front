@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getInitData } from '@/utils/telegram'
+import { logDiag } from '@/utils/diagnostics'
 
 /**
  * If true, all api/* modules dispatch to src/mocks/handlers.js instead of network.
@@ -19,6 +20,7 @@ apiClient.interceptors.request.use((config) => {
   if (initData) {
     config.headers['X-Init-Data'] = initData
   }
+  logDiag('net', `→ ${config.method?.toUpperCase()} ${config.url}`)
   return config
 })
 
@@ -37,13 +39,24 @@ export class ApiError extends Error {
 }
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    logDiag('net', `← ${response.status} ${response.config?.url}`)
+    return response
+  },
   (error) => {
     if (!error.response) {
+      // No response at all — request never reached the server.
+      // This is what a regional block / DNS failure / timeout looks like.
+      logDiag('error', `✕ network: ${error.config?.url || '(unknown url)'}`, {
+        code: error.code || null,
+        message: error.message || null,
+        baseURL: error.config?.baseURL || null,
+      })
       throw new ApiError('Сеть недоступна', { original: error })
     }
     const { status, data } = error.response
     const detail = data?.detail || data?.message || null
+    logDiag('error', `✕ ${status} ${error.config?.url}`, { detail })
 
     let message
     if (status === 401) message = detail || 'Не авторизован'

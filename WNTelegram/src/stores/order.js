@@ -479,6 +479,33 @@ export const useOrderStore = defineStore('order', () => {
     persistDraft(null)
   }
 
+  /**
+   * Drop draft items whose menu_item_id is not in the supplied set of
+   * currently-known menu item IDs. Used after the menu is loaded to
+   * reconcile a persisted draft (e.g. from a previous demo-mode session
+   * or a deleted menu item) against the live catalogue.
+   *
+   * Returns the number of items removed so the caller can surface a toast.
+   */
+  function reconcileDraftWithMenu(validMenuItemIds) {
+    if (!draft.value || !draft.value.items?.length) return 0
+    const valid = new Set(validMenuItemIds)
+    const before = draft.value.items.length
+    const kept = draft.value.items.filter((i) => valid.has(i.menu_item_id))
+    const removed = before - kept.length
+    if (removed === 0) return 0
+
+    if (kept.length === 0) {
+      // Nothing left in the cart — drop the draft entirely so the user
+      // sees a clean "new order" screen rather than an empty stub.
+      clearDraft()
+    } else {
+      draft.value = { ...draft.value, items: kept }
+      persistDraft(draft.value)
+    }
+    return removed
+  }
+
   function reset() {
     orders.value = []
     error.value = null
@@ -504,6 +531,7 @@ export const useOrderStore = defineStore('order', () => {
     replaceDraftWithPaidOrder, replaceDraftEphemeral,
     incDraftItem, decDraftItem, removeDraftItem,
     setDraftTable, setDraftComments, clearDraft,
+    reconcileDraftWithMenu,
     reset,
   }
 })

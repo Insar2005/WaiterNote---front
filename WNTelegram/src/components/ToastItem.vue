@@ -10,7 +10,16 @@
     @pointercancel="onPointerUp"
     @click="onClick"
   >
-    {{ toast.message }}
+    <span class="toast-msg">{{ toast.message }}</span>
+    <button
+      v-if="toast.action"
+      class="toast-action"
+      type="button"
+      @pointerdown.stop
+      @click.stop="onActionClick"
+    >
+      {{ toast.action.label }}
+    </button>
   </div>
 </template>
 
@@ -89,6 +98,18 @@ function onClick() {
   emit('dismiss')
 }
 
+/**
+ * Tap on the action button: fire the handler, then dismiss the toast.
+ * .stop on the click prevents the parent dismiss from firing twice.
+ */
+function onActionClick() {
+  try {
+    props.toast.action?.handler?.()
+  } finally {
+    emit('dismiss')
+  }
+}
+
 const dragStyle = computed(() => {
   if (dragX.value === 0 && !dragging.value) return {}
   // Fade out as the toast moves further from center — gives a clear
@@ -116,6 +137,30 @@ const dragStyle = computed(() => {
   word-wrap: break-word;
   touch-action: pan-y;
   user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-msg {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-action {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toast-action:active {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .toast--success {

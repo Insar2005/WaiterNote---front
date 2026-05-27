@@ -15,11 +15,14 @@ export const useUiStore = defineStore('ui', () => {
 
   /**
    * Show a toast. type: 'success' | 'error' | 'info' | 'warning'
+   * Optional `action`: { label, handler } adds a tappable link next to
+   * the message (e.g. "Логи" on error toasts so users can show us what
+   * happened on devices we can't reach).
    * Returns the toast id so the caller can dismiss it early if needed.
    */
-  function toast(message, { type = 'info', duration = 3000 } = {}) {
+  function toast(message, { type = 'info', duration = 3000, action = null } = {}) {
     const id = ++toastSeq
-    toasts.value.push({ id, message, type })
+    toasts.value.push({ id, message, type, action })
 
     if (type === 'success') hapticNotification('success')
     else if (type === 'error') hapticNotification('error')
@@ -35,9 +38,22 @@ export const useUiStore = defineStore('ui', () => {
     toasts.value = toasts.value.filter((t) => t.id !== id)
   }
 
+  // === Diagnostics panel (globally openable from any toast) ===
+  const diagnosticsOpen = ref(false)
+  function openDiagnostics() { diagnosticsOpen.value = true }
+  function closeDiagnostics() { diagnosticsOpen.value = false }
+
   // Convenience helpers
   const toastSuccess = (msg, opts) => toast(msg, { ...opts, type: 'success' })
-  const toastError = (msg, opts) => toast(msg, { ...opts, type: 'error', duration: 5000 })
+  // Errors are sticky-ish (5s) and offer a "Логи" link so the user can
+  // surface diagnostic info to support when we can't reproduce the issue.
+  const toastError = (msg, opts) =>
+    toast(msg, {
+      duration: 5000,
+      ...opts,
+      type: 'error',
+      action: opts?.action ?? { label: 'Логи', handler: openDiagnostics },
+    })
   const toastInfo = (msg, opts) => toast(msg, { ...opts, type: 'info' })
   const toastWarning = (msg, opts) => toast(msg, { ...opts, type: 'warning' })
 
@@ -96,9 +112,10 @@ export const useUiStore = defineStore('ui', () => {
 
   return {
     // state
-    toasts, confirmDialog, promptDialog,
+    toasts, confirmDialog, promptDialog, diagnosticsOpen,
     // actions
     toast, dismissToast, toastSuccess, toastError, toastInfo, toastWarning,
+    openDiagnostics, closeDiagnostics,
     confirm, resolveConfirm,
     prompt, resolvePrompt,
   }

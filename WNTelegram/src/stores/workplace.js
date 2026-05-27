@@ -46,7 +46,15 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     isLoading.value = true
     error.value = null
     try {
-      items.value = await workplacesApi.list({ includeArchived })
+      const data = await workplacesApi.list({ includeArchived })
+      // The API returns a bare array. Defend against an unexpected shape
+      // (e.g. a paginated {items:[...]} wrapper) so items.value always
+      // stays an array — otherwise later .push()/.filter() calls throw.
+      items.value = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.items)
+          ? data.items
+          : []
 
       // Pick current: prefer last_workplace_id from auth, else first active.
       const auth = useAuthStore()
@@ -84,6 +92,13 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   /** Create new workplace. On success, becomes current. */
   async function create(body) {
     const wp = await workplacesApi.create(body)
+    // Guard: items.value must be an array before push(). If a prior
+    // GET /workplaces returned an unexpected shape (object instead of
+    // array), items.value could be non-iterable — normalise it here so
+    // creating the first workplace during onboarding can't crash.
+    if (!Array.isArray(items.value)) {
+      items.value = []
+    }
     items.value.push(wp)
     currentId.value = wp.id
     useAuthStore().setLastWorkplaceLocal(wp.id)
