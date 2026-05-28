@@ -11,12 +11,22 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoading = ref(false)
   const error = ref(null)
 
+  // === Bot access gate ===
+  // Tri-state probe result from GET /me/bot-access.
+  //   null        — not checked yet (initial state)
+  //   'ok'        — bot can message the user, app is unlocked
+  //   'blocked'   — user hasn't /started the bot (or blocked it); show gate
+  //   'unreachable' — Telegram API hiccup; show retry, NOT the gate
+  const botStatus = ref(null)
+  const botUsername = ref(null)
+
   // === getters ===
   const isAuthenticated = computed(() => user.value !== null)
   const language = computed(() => user.value?.language ?? 'ru')
   const timezone = computed(() => user.value?.timezone ?? 'Europe/Moscow')
   const lastWorkplaceId = computed(() => user.value?.last_workplace_id ?? null)
   const isOnboardingCompleted = computed(() => user.value?.is_onboarding_completed ?? false)
+  const botAccessGranted = computed(() => botStatus.value === 'ok')
 
   // === actions ===
 
@@ -64,17 +74,42 @@ export const useAuthStore = defineStore('auth', () => {
     await updateProfile({ is_onboarding_completed: true })
   }
 
+  /**
+   * Check whether the configured bot can write to this user. Called once
+   * on boot, then again after the user taps "I pressed /start, recheck"
+   * on the gate screen.
+   *
+   * Stores the result in botStatus; callers read that to route. We swallow
+   * exceptions here on purpose — a thrown network error would just look
+   * like "unreachable" to the caller anyway, and we want a clean tri-state
+   * value instead of try/catch all over the place.
+   */
+  async function checkBotAccess() {
+    try {
+      const res = await meApi.getBotAccess()
+      botStatus.value = res?.status ?? 'unreachable'
+      botUsername.value = res?.bot_username ?? null
+    } catch {
+      botStatus.value = 'unreachable'
+    }
+    return botStatus.value
+  }
+
   function reset() {
     user.value = null
     error.value = null
+    botStatus.value = null
+    botUsername.value = null
   }
 
   return {
     // state
-    user, isLoading, error,
+    user, isLoading, error, botStatus, botUsername,
     // getters
     isAuthenticated, language, timezone, lastWorkplaceId, isOnboardingCompleted,
+    botAccessGranted,
     // actions
-    init, updateProfile, setLastWorkplaceLocal, completeOnboarding, reset,
+    init, updateProfile, setLastWorkplaceLocal, completeOnboarding,
+    checkBotAccess, reset,
   }
 })

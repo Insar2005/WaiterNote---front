@@ -70,6 +70,21 @@ async function boot() {
   ready.value = false
   try {
     await auth.init()
+
+    // Bot-access gate. Before loading workplaces/menus we check whether
+    // our bot can actually message this user — if not, the whole app is
+    // unusable (we send order/booking/import notifications via the bot).
+    // 'ok' falls through to normal boot; anything else routes to a gate
+    // screen and stops boot early, so we don't pay for data we won't show.
+    const botStatus = await auth.checkBotAccess()
+    if (botStatus !== 'ok') {
+      if (route.name !== 'bot-required') {
+        router.replace({ name: 'bot-required' })
+      }
+      ready.value = true
+      return
+    }
+
     await workplace.fetchAll()
     notes.fetchAll().catch(() => {})
     if (workplace.currentId) {
@@ -115,6 +130,20 @@ async function boot() {
     bootError.value = e.message || 'Не удалось загрузить данные'
   }
 }
+
+// When the bot-access gate clears (user pressed Start in the bot,
+// or Telegram came back online), we need to actually load the data
+// that the early-returned boot() didn't load. Just navigating to /home
+// from the gate would leave the app empty (no workplaces, no menu);
+// re-running boot() is the clean way to pick up where we left off.
+watch(
+  () => auth.botStatus,
+  (newStatus, oldStatus) => {
+    if (newStatus === 'ok' && oldStatus && oldStatus !== 'ok') {
+      boot()
+    }
+  },
+)
 
 watch(
   () => workplace.currentId,

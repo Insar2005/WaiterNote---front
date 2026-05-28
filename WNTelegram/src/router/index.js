@@ -53,6 +53,12 @@ const router = createRouter({
       meta: { hideBottomNav: true },
     },
     {
+      path: '/bot-required',
+      name: 'bot-required',
+      component: () => import('@/views/auth/BotRequiredView.vue'),
+      meta: { hideBottomNav: true },
+    },
+    {
       path: '/order-history',
       name: 'order-history',
       component: () => import('@/views/order/OrderHistoryView.vue'),
