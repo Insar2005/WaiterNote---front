@@ -65,25 +65,49 @@ const hall = useHallStore()
 const order = useOrderStore()
 const ui = useUiStore()
 
+/**
+ * Telegram passes a string in initDataUnsafe.start_param when the Mini App
+ * is opened via a deep link like `t.me/<bot>?startapp=<value>`. We use
+ * this for "import-share" links — `import_<code>` should land the user
+ * directly on the import screen with the code prefilled. Other start_params
+ * (or no start_param at all) → returns null and boot routes normally.
+ *
+ * Read inside boot() so we always see the freshest value — Telegram sets
+ * it before our scripts run, but reading it lazily keeps this resilient
+ * to any future API timing changes.
+ */
+function deepLinkImportCode() {
+  const param = window.Telegram?.WebApp?.initDataUnsafe?.start_param
+  if (typeof param !== 'string') return null
+  if (!param.startsWith('import_')) return null
+  const code = param.slice('import_'.length).toUpperCase().replace(/[^A-Z0-9]/g, '')
+  return code.length >= 4 ? code : null
+}
+
 async function boot() {
   bootError.value = null
   ready.value = false
   try {
     await auth.init()
 
-    // Bot-access gate. Before loading workplaces/menus we check whether
-    // our bot can actually message this user — if not, the whole app is
-    // unusable (we send order/booking/import notifications via the bot).
-    // 'ok' falls through to normal boot; anything else routes to a gate
-    // screen and stops boot early, so we don't pay for data we won't show.
+    // Bot-access gate. We only block the app on an explicit "blocked"
+    // from Telegram — meaning the user definitely hasn't pressed /start
+    // (or has actively blocked the bot). On "unreachable" we fail OPEN:
+    // some hosting environments (incl. ours) can't reach api.telegram.org
+    // reliably, and locking everyone out because of a backend network
+    // hiccup is worse than silently skipping a notification later.
+    // Once we get a clean "ok" we cache it server-side for a minute, so
+    // a single successful probe unsticks the gate for the rest of the
+    // session.
     const botStatus = await auth.checkBotAccess()
-    if (botStatus !== 'ok') {
+    if (botStatus === 'blocked') {
       if (route.name !== 'bot-required') {
         router.replace({ name: 'bot-required' })
       }
       ready.value = true
       return
     }
+    // 'ok' or 'unreachable' — continue booting.
 
     await workplace.fetchAll()
     notes.fetchAll().catch(() => {})
@@ -116,12 +140,21 @@ async function boot() {
     }
     // Routing decision at app start:
     //  - First-time users (onboarding not completed) → onboarding flow.
+    //  - Deep-linked import (Mini App opened via t.me/<bot>?startapp=import_<code>)
+    //    → /import with the code prefilled, no matter where the hash router
+    //    thinks we should go.
     //  - Everyone else → home screen, regardless of the route the Telegram
     //    hash remembers from a previous session (predictable entry point).
     if (!auth.isOnboardingCompleted) {
       if (route.name !== 'onboarding') {
         router.replace({ name: 'onboarding' })
       }
+    } else if (deepLinkImportCode()) {
+      // start_param "import_XYZ" → /import?code=XYZ
+      router.replace({
+        name: 'import',
+        query: { code: deepLinkImportCode() },
+      })
     } else if (route.name !== 'home') {
       router.replace({ name: 'home' })
     }

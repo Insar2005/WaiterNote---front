@@ -33,6 +33,11 @@
       {{ creating ? 'Создаём…' : '+ Создать ссылку' }}
     </button>
 
+    <!-- Import side: enter someone else's code -->
+    <button class="btn-import" @click="goToImport">
+      ⤓ Импортировать по коду
+    </button>
+
     <!-- TTL prompt sheet -->
     <transition name="fade">
       <div v-if="ttlPromptOpen" class="overlay" @click.self="ttlPromptOpen = false">
@@ -70,12 +75,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useImportsStore } from '@/stores/imports'
 import { useWorkplaceStore } from '@/stores/workplace'
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
 import ShareCard from './ShareCard.vue'
 
+const router = useRouter()
 const imports = useImportsStore()
 const workplace = useWorkplaceStore()
 const auth = useAuthStore()
@@ -100,6 +107,10 @@ onMounted(() => {
     })
   }
 })
+
+function goToImport() {
+  router.push({ name: 'import' })
+}
 
 function onCreateClick() {
   // Only the owner can create. The button is shown regardless of role —
@@ -276,6 +287,22 @@ async function writeToClipboard(text) {
 }
 .btn-create:disabled {
   opacity: 0.6;
+}
+
+.btn-import {
+  width: 100%;
+  padding: 12px;
+  background-color: transparent;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.btn-import:active {
+  background-color: rgba(76, 175, 80, 0.08);
 }
 
 /* TTL prompt */

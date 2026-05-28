@@ -7,6 +7,14 @@
       <div class="topbar-actions">
         <button
           class="icon-btn"
+          @click="goToImport"
+          title="Импортировать"
+          aria-label="Импортировать"
+        >
+          ⤓
+        </button>
+        <button
+          class="icon-btn"
           :disabled="!undoStack.canUndo.value"
           @click="onUndo"
           title="Отменить (Ctrl+Z)"
@@ -172,6 +180,10 @@ let pulseTimer = null
 
 function goBack() {
   router.back()
+}
+
+function goToImport() {
+  router.push({ name: 'import' })
 }
 
 // === Hall form ===

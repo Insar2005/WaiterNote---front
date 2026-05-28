@@ -6,6 +6,14 @@
       <span class="subtitle" v-if="workplace.current">
         {{ workplace.current.title }}
       </span>
+      <button
+        class="header-icon-btn"
+        @click="goToImport"
+        title="Импортировать"
+        aria-label="Импортировать"
+      >
+        ⤓
+      </button>
     </header>
 
     <!-- No workplace selected — should be rare since redirect lives in App.vue -->
@@ -160,6 +168,10 @@ function goBack() {
   router.back()
 }
 
+function goToImport() {
+  router.push({ name: 'import' })
+}
+
 function openCategoryCreate() {
   editingCategory.value = null
   categoryFormVisible.value = true
@@ -240,6 +252,19 @@ function closeItemForm() {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 50%;
+}
+
+.header-icon-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #4caf50;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-left: 4px;
+}
+.header-icon-btn:active {
+  opacity: 0.6;
 }
 
 .search-wrap {
