@@ -44,9 +44,6 @@
           </button>
           <button class="hall-tab hall-tab--add" @click="openHallCreate">+ Зал</button>
         </div>
-        <!-- Layout templates: temporarily disabled until backend support
-             (routers/layouts.py, services/layouts.py) is restored. -->
-        <!--
         <button
           v-if="hall.activeHall"
           class="hall-edit-btn"
@@ -56,7 +53,6 @@
         >
           📋
         </button>
-        -->
         <button
           v-if="hall.activeHall"
           class="hall-edit-btn"
@@ -117,14 +113,12 @@
       @duplicate="onDuplicateFromPanel"
     />
 
-    <!-- Saved table arrangements (templates) — disabled until backend
-         layouts router is restored.
+    <!-- Saved table arrangements (templates) for the active hall -->
     <HallLayoutsPanel
       :visible="layoutsPanelVisible"
       @close="layoutsPanelVisible = false"
       @applied="onLayoutApplied"
     />
-    -->
   </div>
 </template>
 
@@ -141,7 +135,7 @@ import { newId } from '@/utils/nanoid'
 import HallEditorCanvas from './HallEditorCanvas.vue'
 import HallFormModal from './HallFormModal.vue'
 import TableEditPanel from './TableEditPanel.vue'
-// import HallLayoutsPanel from './HallLayoutsPanel.vue' // disabled until backend layouts router is restored
+import HallLayoutsPanel from './HallLayoutsPanel.vue'
 
 const router = useRouter()
 const workplace = useWorkplaceStore()
@@ -163,10 +157,9 @@ const editingTablePanel = computed(() =>
 const hallFormVisible = ref(false)
 const editingHall = ref(null)
 
-// Layouts (templates) panel — disabled until backend support is restored.
-// Keeping the ref/handlers commented (not deleted) so it's a one-line
-// flip when routers/layouts.py comes back.
-// const layoutsPanelVisible = ref(false)
+/** Controls the layouts (templates) bottom sheet. Loaded lazily — we
+ *  fetch the layouts list only when the user opens the panel. */
+const layoutsPanelVisible = ref(false)
 
 /**
  * Id of the table that was just created, used to draw a pulsing highlight
@@ -198,10 +191,11 @@ function closeHallForm() {
 }
 
 // === Layouts (templates) ===
-// Disabled together with the panel above. Keep the implementation here
-// (commented) so re-enabling is a one-block uncomment when the backend
-// layouts router is restored.
-/*
+/**
+ * Open the layouts bottom sheet. We refetch layouts on each open so the
+ * list reflects deletions/renames made elsewhere (currently impossible
+ * but free insurance for the future).
+ */
 async function openLayouts() {
   if (!hall.activeHallId) return
   layoutsPanelVisible.value = true
@@ -212,6 +206,12 @@ async function openLayouts() {
   }
 }
 
+/**
+ * After a template applies, pulse every table that was moved or created
+ * so the user can see what changed without scanning the whole hall.
+ * The summary comes from the apply endpoint:
+ *   { moved: [id...], created: [id...], kept_extras: [...], deleted_extras: [...] }
+ */
 function onLayoutApplied({ moved, created }) {
   const all = [...(moved || []), ...(created || [])]
   if (all.length === 0) return
@@ -225,7 +225,6 @@ function onLayoutApplied({ moved, created }) {
     if (pulseTableId.value === firstId) pulseTableId.value = null
   }, 2000)
 }
-*/
 
 // === Table creation ===
 /**
