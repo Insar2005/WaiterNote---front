@@ -176,23 +176,51 @@ async function copyLink(share) {
 }
 
 /**
- * Native share if possible (mobile Safari, Telegram in-app browser on
- * some versions) — otherwise fall back to clipboard.
+ * Build the message text that goes into the share. Includes both the
+ * code (so the recipient can type/paste it) and the deep-link URL (so
+ * one tap in Telegram opens the import screen with the code prefilled).
+ * Kept verbose on purpose — recipients see this raw in their chat, so
+ * a short instruction line is worth the bytes.
+ */
+function buildShareText(share) {
+  const url = shareUrlFor(share)
+  return (
+    `Привет! Делюсь с тобой меню и расстановкой столов из Waiter Note.\n\n` +
+    `Код для импорта: ${share.code}\n\n` +
+    `Открой ссылку — она откроет мини-приложение и подставит код:\n${url}`
+  )
+}
+
+/**
+ * Share the link. Inside Telegram we open t.me/share/url which spawns
+ * Telegram's native "Forward to chat" picker — the user picks a chat
+ * and the message is sent there. Outside Telegram (browser) we fall
+ * back to the Web Share API, then to clipboard.
  */
 async function shareLink(share) {
   const url = shareUrlFor(share)
-  const text = `Скопируй меню и расстановку столов: ${url}`
-  // Prefer Telegram's own share method when running inside the Mini App —
-  // it opens the native "Forward to chat" dialog without leaving the bot.
+  const text = buildShareText(share)
+
   const tg = window.Telegram?.WebApp
-  if (tg?.shareMessage) {
+  if (tg?.openTelegramLink) {
+    // t.me/share/url is Telegram's official sharing entry point. It opens
+    // the chat picker inside Telegram itself — the user chooses where to
+    // forward and the message lands there with the URL + text we built.
+    // We pass only `text` (no separate `url`) because Telegram appends
+    // its own preview to whichever URL is in the text body, and putting
+    // the URL both in `url=` and inside `text=` would duplicate it.
+    const shareHref =
+      `https://t.me/share/url?url=${encodeURIComponent(url)}` +
+      `&text=${encodeURIComponent(text)}`
     try {
-      tg.shareMessage(text)
+      tg.openTelegramLink(shareHref)
       return
     } catch {
       /* fall through to other options */
     }
   }
+
+  // Outside Telegram: native Web Share if supported (mobile Safari etc.)
   if (navigator.share) {
     try {
       await navigator.share({ text, url })
@@ -201,8 +229,10 @@ async function shareLink(share) {
       /* user cancelled or unsupported */
     }
   }
-  // Fallback: just copy.
-  await copyLink(share)
+
+  // Last resort: copy the rich text so the user can paste it manually.
+  await writeToClipboard(text)
+  ui.toastSuccess('Скопировано в буфер')
 }
 
 /**

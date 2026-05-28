@@ -362,7 +362,16 @@ function pluralize(n, forms) {
 }
 
 function goBack() {
-  router.back()
+  // When the Mini App is opened straight from a t.me deep-link
+  // (?startapp=import_…) there's nothing in the browser history to
+  // "go back" to — router.back() becomes a no-op and the user feels
+  // stuck. Detect the deep-link case (router stack length ≤ 1) and
+  // route to home instead so the back button always does something.
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.replace({ name: 'home' })
+  }
 }
 </script>
 
