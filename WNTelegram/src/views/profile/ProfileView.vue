@@ -62,6 +62,9 @@
       </div>
     </section>
 
+    <!-- Share menu/halls with another workplace's owner -->
+    <ImportSharesSection v-if="workplace.current" />
+
     <!-- Workplaces list -->
     <section class="section">
       <div class="section-header">
@@ -168,6 +171,7 @@ import { useUiStore } from '@/stores/ui'
 import { formatMoney } from '@/utils/format'
 import { USE_MOCK } from '@/api/client'
 import WorkplaceFormModal from '@/components/WorkplaceFormModal.vue'
+import ImportSharesSection from './ImportSharesSection.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
