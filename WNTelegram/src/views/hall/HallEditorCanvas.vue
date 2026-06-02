@@ -479,6 +479,11 @@ defineExpose({
 
 .bg {
   cursor: grab;
+  fill: var(--wn-bg);
+}
+
+.canvas pattern path {
+  stroke: var(--wn-grid-line);
 }
 
 .table {
@@ -487,14 +492,14 @@ defineExpose({
 }
 
 .table-rect {
-  fill: #fff;
-  stroke: #cfd8dc;
+  fill: var(--wn-bg-elevated);
+  stroke: var(--wn-glass-border-subtle);
   stroke-width: 2;
   transition: stroke 0.15s ease, stroke-width 0.15s ease;
 }
 
 .table-number {
-  fill: #455a64;
+  fill: var(--wn-ink-soft);
   font-size: 22px;
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -502,8 +507,9 @@ defineExpose({
 }
 
 .table--selected .table-rect {
-  stroke: #4caf50;
+  stroke: var(--wn-accent);
   stroke-width: 3;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--wn-accent) 60%, transparent));
 }
 
 .table--dragging {
@@ -513,8 +519,8 @@ defineExpose({
 }
 
 .table--dragging .table-rect {
-  fill: #e8f5e9;
-  stroke: #4caf50;
+  fill: color-mix(in srgb, var(--wn-accent) 16%, var(--wn-bg-elevated));
+  stroke: var(--wn-accent);
   stroke-width: 3;
   filter: none;
 }

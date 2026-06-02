@@ -28,8 +28,7 @@
             <rect
               :width="activeHall.width"
               :height="activeHall.height"
-              fill="#fafbfc"
-              stroke="#e0e0e0"
+              class="pick-bg"
               stroke-width="2"
             />
             <g
@@ -71,7 +70,8 @@
 
         <div class="legend">
           <span class="legend-item"><span class="legend-dot legend-dot--free" />Свободен</span>
-          <span class="legend-item"><span class="legend-dot legend-dot--occupied" />Занят</span>
+          <span class="legend-item"><span class="legend-dot legend-dot--waiting" />Не подано</span>
+          <span class="legend-item"><span class="legend-dot legend-dot--occupied" />Ждёт оплаты</span>
           <span class="legend-item"><span class="legend-dot legend-dot--reserved" />Резерв</span>
         </div>
 
@@ -239,6 +239,11 @@ function onPick(t) {
   padding: 40px 20px;
 }
 
+.pick-bg {
+  fill: var(--wn-bg);
+  stroke: var(--wn-glass-border-subtle);
+}
+
 .pick-table {
   cursor: pointer;
 }
@@ -256,25 +261,37 @@ function onPick(t) {
 }
 
 .pick-table--free .pick-table-rect {
-  fill: #fff;
-  stroke: #cfd8dc;
+  fill: var(--wn-bg-elevated);
+  stroke: var(--wn-glass-border-subtle);
 }
 .pick-table--free .pick-table-num {
-  fill: #455a64;
+  fill: var(--wn-ink-soft);
 }
 
-.pick-table--occupied .pick-table-rect,
+/* Не подано — акцентный неон */
 .pick-table--waiting .pick-table-rect {
-  fill: #ffebee;
-  stroke: #ef5350;
+  fill: color-mix(in srgb, var(--wn-accent) 16%, var(--wn-bg-elevated));
+  stroke: var(--wn-accent);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--wn-accent) 65%, transparent));
 }
-.pick-table--occupied .pick-table-num,
 .pick-table--waiting .pick-table-num {
-  fill: #c62828;
+  fill: var(--wn-accent-text);
+}
+
+/* Ждёт оплаты — всегда красный неон */
+.pick-table--occupied .pick-table-rect {
+  fill: color-mix(in srgb, var(--wn-danger) 16%, var(--wn-bg-elevated));
+  stroke: var(--wn-danger);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--wn-danger) 65%, transparent));
+}
+.pick-table--occupied .pick-table-num {
+  fill: var(--wn-danger);
 }
 
 .pick-table--reserved .pick-table-rect {
-  fill: #e3f2fd;
+  fill: color-mix(in srgb, #42a5f5 15%, var(--wn-bg-elevated));
   stroke: #42a5f5;
 }
 .pick-table--reserved .pick-table-num {
@@ -282,12 +299,13 @@ function onPick(t) {
 }
 
 .pick-table--current .pick-table-rect {
-  stroke: #4caf50;
+  stroke: var(--wn-accent);
   stroke-width: 4;
-  fill: #e8f5e9;
+  fill: color-mix(in srgb, var(--wn-accent) 22%, var(--wn-bg-elevated));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--wn-accent) 70%, transparent));
 }
 .pick-table--current .pick-table-num {
-  fill: #2e7d32;
+  fill: var(--wn-accent-text);
 }
 
 .pick-table--blocked {
@@ -323,14 +341,18 @@ function onPick(t) {
 
 .legend-dot--free {
   background-color: var(--wn-bg-elevated);
-  border: 1.5px solid #cfd8dc;
+  border: 1.5px solid var(--wn-glass-border-subtle);
+}
+.legend-dot--waiting {
+  background-color: color-mix(in srgb, var(--wn-accent) 22%, var(--wn-bg-elevated));
+  border: 1.5px solid var(--wn-accent);
 }
 .legend-dot--occupied {
-  background-color: #ffebee;
-  border: 1.5px solid #ef5350;
+  background-color: color-mix(in srgb, var(--wn-danger) 22%, var(--wn-bg-elevated));
+  border: 1.5px solid var(--wn-danger);
 }
 .legend-dot--reserved {
-  background-color: #e3f2fd;
+  background-color: color-mix(in srgb, #42a5f5 18%, var(--wn-bg-elevated));
   border: 1.5px solid #42a5f5;
 }
 

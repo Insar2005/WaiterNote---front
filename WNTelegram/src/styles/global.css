@@ -66,6 +66,11 @@
   --wn-accent-text: var(--wn-accent-ink);  /* readable accent text on bg   */
   --wn-focus: var(--wn-accent);
 
+  /* Neon red for the "ждёт оплаты" table status — always red, theme-independent */
+  --wn-danger: #f5334f;
+  /* Floor-map grid lines */
+  --wn-grid-line: var(--wn-glass-border-subtle);
+
   /* === Shadows === */
   /* Soft, multi-layered. Use these instead of hand-rolled box-shadows. */
   --wn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03);
@@ -111,6 +116,7 @@
 
   --wn-accent-fill: color-mix(in srgb, var(--wn-accent) 24%, #1e1e26);
   --wn-accent-text: color-mix(in srgb, var(--wn-accent) 62%, #ffffff);
+  --wn-danger: #ff5168;
 
   --wn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --wn-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.4);

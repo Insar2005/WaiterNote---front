@@ -51,8 +51,8 @@ defineEmits(['add'])
 }
 
 .row--in-cart {
-  border-color: var(--wn-accent-text);
-  background-color: #f1f8e9;
+  border-color: var(--wn-accent);
+  background-color: var(--wn-accent-fill);
 }
 
 .row-main {

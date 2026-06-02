@@ -388,6 +388,12 @@ defineExpose({
 
 .bg {
   cursor: grab;
+  fill: var(--wn-bg);
+}
+
+/* Floor-map grid lines follow the theme */
+.canvas pattern path {
+  stroke: var(--wn-grid-line);
 }
 
 .table {
@@ -395,14 +401,14 @@ defineExpose({
 }
 
 .table-rect {
-  fill: #fff;
-  stroke: #cfd8dc;
+  fill: var(--wn-bg-elevated);
+  stroke: var(--wn-glass-border-subtle);
   stroke-width: 2;
   transition: fill 0.15s ease, stroke 0.15s ease;
 }
 
 .table-num {
-  fill: #455a64;
+  fill: var(--wn-ink-soft);
   font-size: 22px;
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -410,23 +416,38 @@ defineExpose({
 }
 
 .table--free .table-rect {
-  fill: #fff;
-  stroke: #cfd8dc;
+  fill: var(--wn-bg-elevated);
+  stroke: var(--wn-glass-border-subtle);
 }
 
+/* Не подано — акцентный неон */
 .table--waiting .table-rect {
-  fill: #fff8e1;
-  stroke: #ffb74d;
+  fill: color-mix(in srgb, var(--wn-accent) 16%, var(--wn-bg-elevated));
+  stroke: var(--wn-accent);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--wn-accent) 65%, transparent));
+}
+.table--waiting .table-num {
+  fill: var(--wn-accent-text);
 }
 
+/* Ждёт оплаты — всегда красный неон */
 .table--occupied .table-rect {
-  fill: #ffebee;
-  stroke: #ef5350;
+  fill: color-mix(in srgb, var(--wn-danger) 16%, var(--wn-bg-elevated));
+  stroke: var(--wn-danger);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--wn-danger) 65%, transparent));
+}
+.table--occupied .table-num {
+  fill: var(--wn-danger);
 }
 
 .table--reserved .table-rect {
-  fill: #e3f2fd;
+  fill: color-mix(in srgb, #42a5f5 15%, var(--wn-bg-elevated));
   stroke: #42a5f5;
+}
+.table--reserved .table-num {
+  fill: #42a5f5;
 }
 
 .table:active .table-rect {
