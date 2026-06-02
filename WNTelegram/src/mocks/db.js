@@ -107,6 +107,11 @@ export function ensureMe() {
     last_workplace_id: null,
     is_onboarding_completed: demoMode,
     is_disabled: false,
+    // Appearance prefs — mirror backend defaults so the mock /me payload
+    // matches the real one. Settings store falls back to these when
+    // localStorage is empty.
+    accent_key: 'green',
+    theme: 'auto',
     created_at: now,
     updated_at: now,
   }

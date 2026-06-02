@@ -80,7 +80,7 @@ export async function getMe() {
 export async function updateMe(patch) {
   await delay()
   ensureMe()
-  const allowed = ['language', 'timezone', 'is_onboarding_completed']
+  const allowed = ['language', 'timezone', 'is_onboarding_completed', 'accent_key', 'theme']
   tx(() => {
     for (const k of allowed) {
       if (patch[k] !== undefined) db.me[k] = patch[k]

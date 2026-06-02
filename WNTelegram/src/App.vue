@@ -48,6 +48,7 @@ import { useUiStore } from '@/stores/ui'
 import { useNotesStore } from '@/stores/notes'
 import { useHallStore } from '@/stores/hall'
 import { useOrderStore } from '@/stores/order'
+import { useSettingsStore } from '@/stores/settings'
 
 const route = useRoute()
 const router = useRouter()
@@ -64,6 +65,14 @@ const notes = useNotesStore()
 const hall = useHallStore()
 const order = useOrderStore()
 const ui = useUiStore()
+const settings = useSettingsStore()
+
+// Paint the cached appearance (accent + theme) from localStorage as
+// early as possible — this happens before any network I/O so the user
+// never sees a light-themed flash on a dark device while /me loads.
+// The server's prefs (if any) are applied later in boot(), once auth
+// has populated the user object.
+settings.init()
 
 /**
  * Telegram passes a string in initDataUnsafe.start_param when the Mini App
@@ -89,6 +98,12 @@ async function boot() {
   ready.value = false
   try {
     await auth.init()
+
+    // Reconcile appearance with what the server knows about this user.
+    // If they switched accent/theme on another device, that choice now
+    // overrides the local cache. No-op for fresh users — they'll keep
+    // whatever the local cache had until they make their first change.
+    settings.applyFromUser(auth.user)
 
     // Bot-access gate. We only block the app on an explicit "blocked"
     // from Telegram — meaning the user definitely hasn't pressed /start
@@ -219,8 +234,8 @@ onMounted(boot)
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--wn-bg);
-  color: var(--wn-ink);
+  background-color: #f5f5f7;
+  color: #1a1a1a;
 }
 
 .app-content {
@@ -246,8 +261,8 @@ onMounted(boot)
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid var(--wn-bg-recessed);
-  border-top-color: var(--wn-accent);
+  border: 3px solid #d8d8d8;
+  border-top-color: #4caf50;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -259,7 +274,7 @@ onMounted(boot)
 }
 
 .boot-text {
-  color: var(--wn-ink-mute);
+  color: #888;
   font-size: 14px;
   margin: 0;
 }
@@ -274,7 +289,7 @@ onMounted(boot)
   padding: 10px 20px;
   border-radius: 10px;
   border: none;
-  background-color: var(--wn-accent);
+  background-color: #4caf50;
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -287,7 +302,7 @@ onMounted(boot)
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: var(--wn-ink-mute);
+  color: #888;
   font-size: 13px;
   text-decoration: underline;
   cursor: pointer;

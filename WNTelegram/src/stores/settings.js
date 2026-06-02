@@ -1,12 +1,22 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getColorScheme, isInsideTelegram, setHeaderColor } from '@/utils/telegram'
+import { meApi } from '@/api/me'
 
 /**
  * Appearance settings: accent color + theme mode.
- * Persisted to localStorage and applied to <html> as:
- *   - inline CSS vars (--wn-accent*) for the chosen accent
- *   - data-theme="light|dark" for the resolved theme
+ *
+ * Persistence is dual-track on purpose:
+ *   1) Server (PATCH /me) — the canonical store, syncs across devices.
+ *      User flips theme on phone → opens desktop next day → same theme.
+ *   2) localStorage — fast local cache. Reads paint the UI before /me
+ *      arrives, so the user never sees a light-mode flash on a dark
+ *      device. Writes happen on every change so an offline tweak survives
+ *      a reload even if we can't reach the server.
+ *
+ * Conflict resolution: when both have a value, the server wins on app
+ * start (it's the "source of truth across devices"). Within a session,
+ * the user's most recent choice wins both locally and server-side.
  *
  * Theme "auto" follows Telegram's colorScheme (or the OS prefers-color-scheme
  * when running outside Telegram) and reacts live to changes.
@@ -73,19 +83,26 @@ export const useSettingsStore = defineStore('settings', () => {
 
   function setAccent(key) {
     if (!ACCENTS.some((a) => a.key === key)) return
+    if (accentKey.value === key) return
     accentKey.value = key
     applyAccent()
-    persist()
+    persistLocal()
+    // Fire-and-forget server sync. Don't await — UI shouldn't wait for
+    // the network. On failure we keep the local change; next successful
+    // PATCH will catch up.
+    syncToServer({ accent_key: key })
   }
 
   function setTheme(value) {
     if (!THEME_KEYS.includes(value)) return
+    if (theme.value === value) return
     theme.value = value
     applyTheme()
-    persist()
+    persistLocal()
+    syncToServer({ theme: value })
   }
 
-  function persist() {
+  function persistLocal() {
     try {
       localStorage.setItem(
         STORAGE_KEY,
@@ -94,7 +111,7 @@ export const useSettingsStore = defineStore('settings', () => {
     } catch { /* storage unavailable — settings just won't persist */ }
   }
 
-  function load() {
+  function loadLocal() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
       if (!raw) return
@@ -106,10 +123,70 @@ export const useSettingsStore = defineStore('settings', () => {
     } catch { /* corrupt value — fall back to defaults */ }
   }
 
+  /**
+   * Apply preferences received from the server (typically /me on boot).
+   * The server is the canonical source on app start — it wins over
+   * whatever localStorage had cached. We still update localStorage to
+   * keep the next cold start fast.
+   */
+  function applyFromUser(user) {
+    if (!user) return
+    let changed = false
+    if (user.accent_key && ACCENTS.some((a) => a.key === user.accent_key)) {
+      if (accentKey.value !== user.accent_key) {
+        accentKey.value = user.accent_key
+        changed = true
+      }
+    }
+    if (THEME_KEYS.includes(user.theme)) {
+      if (theme.value !== user.theme) {
+        theme.value = user.theme
+        changed = true
+      }
+    }
+    if (changed) {
+      applyAccent()
+      applyTheme()
+      persistLocal()
+    }
+  }
+
+  /**
+   * Push a change to the server. Best-effort: errors are logged but
+   * don't surface to the user — appearance is too low-stakes to bother
+   * with a retry UI, and the next successful change will overwrite
+   * whatever drift accumulated.
+   *
+   * Inflight tracking ensures rapid toggles (e.g. user mashing the
+   * accent swatches) don't pile up overlapping PATCH calls — we keep
+   * only the latest pending value and dispatch it once the current
+   * one settles.
+   */
+  let inflight = null
+  let pending = null
+  async function syncToServer(patch) {
+    pending = { ...(pending || {}), ...patch }
+    if (inflight) return
+    while (pending) {
+      const next = pending
+      pending = null
+      inflight = meApi.update(next).catch((e) => {
+        // Soft-fail: keep local state, log for diagnostics.
+        // eslint-disable-next-line no-console
+        console.warn('[settings] failed to sync to /me', e?.message || e)
+      })
+      try { await inflight } finally { inflight = null }
+    }
+  }
+
   let bound = false
-  /** Load persisted prefs, paint them, and start listening for system changes. */
+  /**
+   * Paint the saved prefs to the DOM and start listening for system
+   * theme changes. Safe to call before `/me` has loaded — pass user
+   * later via `applyFromUser` once it's available.
+   */
   function init() {
-    load()
+    loadLocal()
     applyAccent()
     applyTheme()
     if (bound) return
@@ -131,6 +208,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
   return {
     accentKey, theme, accent, resolvedTheme,
-    setAccent, setTheme, init,
+    setAccent, setTheme, init, applyFromUser,
   }
 })
