@@ -119,7 +119,7 @@ defineExpose({
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
@@ -178,8 +178,8 @@ defineExpose({
 .sheet-footer {
   flex-shrink: 0;
   padding: 12px 16px;
-  border-top: 1px solid #f0f0f0;
-  background-color: #fff;
+  border-top: 1px solid var(--wn-glass-border-subtle);
+  background-color: var(--wn-bg-elevated);
 }
 
 .sheet-fade-enter-active,

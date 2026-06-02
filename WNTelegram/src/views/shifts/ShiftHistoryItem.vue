@@ -31,7 +31,7 @@ defineEmits(['open'])
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   padding: 12px 16px;
   border-radius: 12px;
   cursor: pointer;
@@ -39,7 +39,7 @@ defineEmits(['open'])
 }
 
 .row:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .row-main {
@@ -50,13 +50,13 @@ defineEmits(['open'])
 .row-date {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   margin-bottom: 2px;
 }
 
 .row-meta {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,12 +73,12 @@ defineEmits(['open'])
 .amount {
   font-size: 14px;
   font-weight: 600;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   font-variant-numeric: tabular-nums;
 }
 
 .tips {
   font-size: 11px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 </style>

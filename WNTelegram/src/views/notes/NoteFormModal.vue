@@ -264,7 +264,7 @@ async function onDelete() {
 }
 
 .sheet {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 100%;
@@ -277,12 +277,12 @@ async function onDelete() {
 .sheet-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   z-index: 1;
 }
 
@@ -314,7 +314,7 @@ async function onDelete() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -330,26 +330,26 @@ async function onDelete() {
   font-size: 17px;
   font-weight: 600;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   outline: none;
   font-family: inherit;
   transition: border-color 0.15s ease;
 }
 
 .title-input:focus {
-  border-color: #4caf50;
-  background-color: #fff;
+  border-color: var(--wn-accent-text);
+  background-color: var(--wn-bg-elevated);
 }
 
 .content-input {
   font-size: 14px;
   line-height: 1.5;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   outline: none;
   font-family: inherit;
   resize: vertical;
@@ -358,8 +358,8 @@ async function onDelete() {
 }
 
 .content-input:focus {
-  border-color: #4caf50;
-  background-color: #fff;
+  border-color: var(--wn-accent-text);
+  background-color: var(--wn-bg-elevated);
 }
 
 .scope-field {
@@ -374,7 +374,7 @@ async function onDelete() {
 .scope-label {
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: var(--wn-ink-soft);
   padding: 0;
 }
 
@@ -389,12 +389,12 @@ async function onDelete() {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
   cursor: pointer;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   font-size: 14px;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .scope-option--disabled {
@@ -403,11 +403,11 @@ async function onDelete() {
 }
 
 .scope-option input {
-  accent-color: #4caf50;
+  accent-color: var(--wn-accent-text);
 }
 
 .scope-option small {
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 12px;
 }
 
@@ -416,7 +416,7 @@ async function onDelete() {
   flex-direction: column;
   gap: 6px;
   padding: 10px 12px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   border-radius: 10px;
 }
 
@@ -436,8 +436,8 @@ async function onDelete() {
 }
 
 .scope-badge--workplace {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: var(--wn-accent-fill);
+  color: var(--wn-accent-text);
 }
 
 .scope-badge--shift {
@@ -447,7 +447,7 @@ async function onDelete() {
 
 .scope-hint {
   font-size: 11px;
-  color: #888;
+  color: var(--wn-ink-mute);
   line-height: 1.4;
 }
 
@@ -485,11 +485,11 @@ async function onDelete() {
 
 .btn--ghost {
   background-color: transparent;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 

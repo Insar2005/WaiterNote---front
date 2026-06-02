@@ -89,7 +89,7 @@ async function recheck() {
 }
 
 .gate-card {
-  background: #fff;
+  background: var(--wn-bg-elevated);
   padding: 32px 24px;
   border-radius: 16px;
   max-width: 380px;
@@ -107,13 +107,13 @@ async function recheck() {
   font-size: 20px;
   font-weight: 600;
   margin: 0 0 12px;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .gate-text {
   font-size: 14px;
   line-height: 1.5;
-  color: #555;
+  color: var(--wn-ink-soft);
   margin: 0 0 24px;
 }
 
@@ -130,7 +130,7 @@ async function recheck() {
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   margin-bottom: 10px;
 }

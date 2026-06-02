@@ -197,7 +197,7 @@ async function loadMore() {
 
 .subtitle {
   font-size: 13px;
-  color: #888;
+  color: var(--wn-ink-mute);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -211,14 +211,14 @@ async function loadMore() {
 .section-title {
   font-size: 15px;
   font-weight: 600;
-  color: #888;
+  color: var(--wn-ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 10px 0;
 }
 
 .empty {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   padding: 24px 16px;
   text-align: center;
@@ -226,7 +226,7 @@ async function loadMore() {
 
 .empty-text {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
 }
 
@@ -235,7 +235,7 @@ async function loadMore() {
   align-items: center;
   justify-content: center;
   padding: 60px 16px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .history-list {
@@ -247,9 +247,9 @@ async function loadMore() {
 .btn-more {
   width: 100%;
   margin-top: 8px;
-  background-color: #fff;
-  color: #4caf50;
-  border: 1px solid #4caf50;
+  background-color: var(--wn-bg-elevated);
+  color: var(--wn-accent-text);
+  border: 1px solid var(--wn-accent);
   padding: 10px 16px;
   border-radius: 10px;
   font-size: 13px;
@@ -258,7 +258,7 @@ async function loadMore() {
 }
 
 .btn-more:active {
-  background-color: #f0f0f0;
+  background-color: var(--wn-bg-recessed);
 }
 
 .loading-row {
@@ -270,8 +270,8 @@ async function loadMore() {
 .spinner-small {
   width: 18px;
   height: 18px;
-  border: 2px solid #e0e0e0;
-  border-top-color: #4caf50;
+  border: 2px solid var(--wn-bg-recessed);
+  border-top-color: var(--wn-accent-text);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

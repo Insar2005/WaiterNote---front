@@ -45,7 +45,7 @@ const workplace = useWorkplaceStore()
 
 <style scoped>
 .block {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 16px;
   padding: 24px 20px;
   text-align: center;
@@ -62,18 +62,18 @@ const workplace = useWorkplaceStore()
   margin: 0;
   font-size: 17px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .block-text {
   margin: 0;
   font-size: 13px;
   line-height: 1.5;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .snapshot {
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
   border-radius: 10px;
   padding: 10px 14px;
   margin: 4px 0 8px 0;
@@ -87,16 +87,16 @@ const workplace = useWorkplaceStore()
 }
 
 .snapshot-label {
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .snapshot-value {
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-weight: 500;
 }
 
 .btn-open {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 14px 24px;

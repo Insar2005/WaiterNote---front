@@ -219,8 +219,8 @@ onMounted(boot)
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f7;
-  color: #1a1a1a;
+  background-color: var(--wn-bg);
+  color: var(--wn-ink);
 }
 
 .app-content {
@@ -246,8 +246,8 @@ onMounted(boot)
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid #d8d8d8;
-  border-top-color: #4caf50;
+  border: 3px solid var(--wn-bg-recessed);
+  border-top-color: var(--wn-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -259,7 +259,7 @@ onMounted(boot)
 }
 
 .boot-text {
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
   margin: 0;
 }
@@ -274,7 +274,7 @@ onMounted(boot)
   padding: 10px 20px;
   border-radius: 10px;
   border: none;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -287,7 +287,7 @@ onMounted(boot)
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 13px;
   text-decoration: underline;
   cursor: pointer;

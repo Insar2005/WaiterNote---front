@@ -5,6 +5,62 @@
       <p class="subtitle">@{{ auth.user?.username || 'без имени' }}</p>
     </header>
 
+    <!-- Personalization: accent color + theme -->
+    <section class="section">
+      <h2 class="section-title">Персонализация</h2>
+
+      <div class="perso-card">
+        <div class="perso-block">
+          <span class="perso-label">Цвет акцента</span>
+          <div class="swatches">
+            <button
+              v-for="a in accents"
+              :key="a.key"
+              class="swatch"
+              :class="{ 'swatch--active': settings.accentKey === a.key }"
+              :style="{ '--sw': a.accent }"
+              :aria-label="a.label"
+              :aria-pressed="settings.accentKey === a.key"
+              @click="settings.setAccent(a.key)"
+            >
+              <svg
+                v-if="settings.accentKey === a.key"
+                class="swatch-check"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12.5 10 17.5 19 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="perso-divider" />
+
+        <div class="perso-block">
+          <span class="perso-label">Тема</span>
+          <div class="seg">
+            <button
+              v-for="t in themeOptions"
+              :key="t.key"
+              class="seg-btn"
+              :class="{ 'seg-btn--on': settings.theme === t.key }"
+              @click="settings.setTheme(t.key)"
+            >
+              {{ t.label }}
+            </button>
+          </div>
+          <p class="perso-hint">
+            «Авто» подстраивается под тему Telegram.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- Account: Telegram ID with hide/copy -->
     <section class="section">
       <h2 class="section-title">Аккаунт</h2>
@@ -168,6 +224,8 @@ import { useWorkplaceStore } from '@/stores/workplace'
 import { useMenuStore } from '@/stores/menu'
 import { useHallStore } from '@/stores/hall'
 import { useUiStore } from '@/stores/ui'
+import { useSettingsStore } from '@/stores/settings'
+import { ACCENTS, THEME_OPTIONS } from '@/stores/settings'
 import { formatMoney } from '@/utils/format'
 import { USE_MOCK } from '@/api/client'
 import WorkplaceFormModal from '@/components/WorkplaceFormModal.vue'
@@ -179,6 +237,11 @@ const workplace = useWorkplaceStore()
 const menu = useMenuStore()
 const hall = useHallStore()
 const ui = useUiStore()
+const settings = useSettingsStore()
+
+// Appearance options for the Персонализация section
+const accents = ACCENTS
+const themeOptions = THEME_OPTIONS
 
 const formVisible = ref(false)
 const editingWorkplace = ref(null)
@@ -339,8 +402,105 @@ async function onResetMock() {
 
 .subtitle {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
+}
+
+/* === Personalization === */
+.perso-card {
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
+  border-radius: var(--wn-radius-lg);
+  box-shadow: var(--wn-shadow-sm);
+  overflow: hidden;
+}
+
+.perso-block {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.perso-divider {
+  height: 1px;
+  background-color: var(--wn-glass-border-subtle);
+}
+
+.perso-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wn-ink-soft);
+}
+
+.swatches {
+  display: flex;
+  gap: 12px;
+}
+
+.swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--wn-radius-pill);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background-color: var(--sw);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--sw) 45%, transparent);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: transform 0.15s ease, outline-color 0.15s ease;
+}
+
+.swatch:active {
+  transform: scale(0.9);
+}
+
+.swatch--active {
+  outline-color: var(--sw);
+}
+
+.swatch-check {
+  width: 22px;
+  height: 22px;
+}
+
+.seg {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background-color: var(--wn-bg-recessed);
+  border-radius: var(--wn-radius-pill);
+}
+
+.seg-btn {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  padding: 9px 8px;
+  border-radius: var(--wn-radius-pill);
+  background: transparent;
+  color: var(--wn-ink-soft);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.seg-btn--on {
+  background-color: var(--wn-bg-elevated);
+  color: var(--wn-accent-text);
+  box-shadow: var(--wn-shadow-sm);
+}
+
+.perso-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--wn-ink-mute);
 }
 
 .section {
@@ -358,6 +518,7 @@ async function onResetMock() {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 12px 0;
+  color: var(--wn-ink);
 }
 
 .section-header .section-title {
@@ -371,8 +532,8 @@ async function onResetMock() {
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  background-color: #fff;
-  border: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 12px;
 }
 
@@ -385,13 +546,13 @@ async function onResetMock() {
 
 .tg-id-label {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .tg-id-value {
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.5px;
   overflow: hidden;
@@ -410,7 +571,7 @@ async function onResetMock() {
   height: 38px;
   border: none;
   border-radius: 10px;
-  background-color: #f0f0f2;
+  background-color: var(--wn-bg-recessed);
   font-size: 16px;
   cursor: pointer;
   display: inline-flex;
@@ -427,13 +588,13 @@ async function onResetMock() {
   margin: 8px 2px 0;
   font-size: 12px;
   line-height: 1.4;
-  color: #999;
+  color: var(--wn-ink-mute);
 }
 
 .btn-add {
   background-color: transparent;
-  border: 1px solid #4caf50;
-  color: #4caf50;
+  border: 1px solid var(--wn-accent);
+  color: var(--wn-accent-text);
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 13px;
@@ -446,7 +607,7 @@ async function onResetMock() {
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 12px 24px;
@@ -462,14 +623,14 @@ async function onResetMock() {
   align-items: center;
   gap: 16px;
   padding: 32px 16px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   text-align: center;
 }
 
 .empty-text {
   margin: 0;
-  color: #666;
+  color: var(--wn-ink-soft);
   font-size: 14px;
 }
 
@@ -485,7 +646,7 @@ async function onResetMock() {
   align-items: center;
   gap: 12px;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   padding: 14px 16px;
   border-radius: 12px;
   border: none;
@@ -496,7 +657,7 @@ async function onResetMock() {
 }
 
 .action-row:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .action-row--disabled {
@@ -518,17 +679,17 @@ async function onResetMock() {
 .action-name {
   font-size: 15px;
   font-weight: 500;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .action-meta {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .action-chev {
   font-size: 18px;
-  color: #ccc;
+  color: var(--wn-ink-faint);
 }
 
 /* Workplace cards */
@@ -536,7 +697,7 @@ async function onResetMock() {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   padding: 14px 16px;
   border-radius: 12px;
   cursor: pointer;
@@ -549,7 +710,7 @@ async function onResetMock() {
 }
 
 .card--current {
-  border-color: #4caf50;
+  border-color: var(--wn-accent);
 }
 
 .card--archived {
@@ -573,7 +734,7 @@ async function onResetMock() {
 .card-title {
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .card-badge {
@@ -581,20 +742,20 @@ async function onResetMock() {
   font-weight: 500;
   padding: 2px 8px;
   border-radius: 6px;
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: var(--wn-accent-fill);
+  color: var(--wn-accent-text);
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
 .card-badge--muted {
-  background-color: #f0f0f0;
-  color: #666;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink-mute);
 }
 
 .card-meta {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .card-action {
@@ -608,7 +769,7 @@ async function onResetMock() {
 }
 
 .card-action:active {
-  background-color: #f0f0f0;
+  background-color: var(--wn-bg-recessed);
 }
 
 /* === Dev tools === */
@@ -632,8 +793,8 @@ async function onResetMock() {
 }
 
 .btn-dev {
-  background-color: #fff;
-  color: #333;
+  background-color: var(--wn-bg-elevated);
+  color: var(--wn-ink-soft);
   border: 1px solid #ffd54f;
   padding: 10px 14px;
   border-radius: 8px;
@@ -656,7 +817,7 @@ async function onResetMock() {
 .dev-hint {
   margin: 8px 0 0 0;
   font-size: 11px;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-style: italic;
 }
 </style>

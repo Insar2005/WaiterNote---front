@@ -128,7 +128,7 @@ const dragStyle = computed(() => {
   pointer-events: auto;
   padding: 12px 16px;
   border-radius: 12px;
-  background-color: #333;
+  background-color: #2f2f37;
   color: #fff;
   font-size: 14px;
   line-height: 1.35;

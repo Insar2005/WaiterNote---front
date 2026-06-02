@@ -36,7 +36,7 @@ defineEmits(['add'])
   gap: 12px;
   width: 100%;
   padding: 14px 16px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border: 2px solid transparent;
   border-radius: 12px;
   cursor: pointer;
@@ -46,12 +46,12 @@ defineEmits(['add'])
 }
 
 .row:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
   transform: scale(0.99);
 }
 
 .row--in-cart {
-  border-color: #4caf50;
+  border-color: var(--wn-accent-text);
   background-color: #f1f8e9;
 }
 
@@ -66,7 +66,7 @@ defineEmits(['add'])
   gap: 8px;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   margin-bottom: 2px;
 }
 
@@ -75,7 +75,7 @@ defineEmits(['add'])
   font-weight: 600;
   padding: 2px 7px;
   border-radius: 10px;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   font-variant-numeric: tabular-nums;
 }
@@ -84,7 +84,7 @@ defineEmits(['add'])
   display: flex;
   gap: 8px;
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -92,7 +92,7 @@ defineEmits(['add'])
 
 .portion {
   flex-shrink: 0;
-  color: #aaa;
+  color: var(--wn-ink-faint);
 }
 
 .description {
@@ -103,7 +103,7 @@ defineEmits(['add'])
 .row-price {
   font-size: 15px;
   font-weight: 600;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   flex-shrink: 0;
   font-variant-numeric: tabular-nums;
 }

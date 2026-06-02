@@ -143,7 +143,7 @@ function onCancel() {
 .prompt-modal {
   width: 100%;
   max-width: 480px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -164,7 +164,7 @@ function onCancel() {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   flex: 1;
   min-width: 0;
 }
@@ -174,7 +174,7 @@ function onCancel() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 0;
   width: 28px;
@@ -193,18 +193,18 @@ function onCancel() {
   font-family: inherit;
   font-size: 15px;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
   outline: none;
   box-sizing: border-box;
-  background-color: #fafafa;
-  color: #1a1a1a;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink);
   transition: border-color 0.15s ease;
 }
 
 .prompt-input:focus {
   border-color: var(--wn-accent, #4caf50);
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
 }
 
 .prompt-input--multiline {
@@ -237,8 +237,8 @@ function onCancel() {
 }
 
 .btn--ghost {
-  background-color: #f0f0f2;
-  color: #1a1a1a;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink);
 }
 
 .btn--ghost:active {

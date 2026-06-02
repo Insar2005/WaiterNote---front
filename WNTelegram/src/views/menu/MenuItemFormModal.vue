@@ -196,15 +196,13 @@ async function onDelete() {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 250;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 100%;
@@ -212,20 +210,17 @@ async function onDelete() {
   max-height: 90vh;
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom);
-  /* Pin to viewport bottom — prevents iOS from shifting the modal sideways
-     when the on-screen keyboard appears (a well-known bug with flex-end
-     centring of fixed elements). Bounded on all sides → nothing to slide. */
 }
 
 .sheet-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   z-index: 1;
 }
 
@@ -240,7 +235,7 @@ async function onDelete() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -274,23 +269,23 @@ async function onDelete() {
 .field-label {
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .field-input {
   font-size: 15px;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   outline: none;
   transition: border-color 0.15s ease;
   font-family: inherit;
 }
 
 .field-input:focus {
-  border-color: #4caf50;
-  background-color: #fff;
+  border-color: var(--wn-accent-text);
+  background-color: var(--wn-bg-elevated);
 }
 
 .field-textarea {
@@ -303,12 +298,12 @@ async function onDelete() {
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: #333;
+  color: var(--wn-ink-soft);
   cursor: pointer;
 }
 
 .checkbox input {
-  accent-color: #4caf50;
+  accent-color: var(--wn-accent-text);
 }
 
 .actions {
@@ -343,11 +338,11 @@ async function onDelete() {
 
 .btn--ghost {
   background-color: transparent;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 

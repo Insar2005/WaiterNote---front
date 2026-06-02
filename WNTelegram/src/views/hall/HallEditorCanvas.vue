@@ -458,7 +458,7 @@ defineExpose({
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -557,7 +557,7 @@ defineExpose({
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
   overflow: hidden;
@@ -573,14 +573,14 @@ defineExpose({
   border: none;
   font-size: 20px;
   font-weight: 500;
-  color: #333;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.12s ease;
 }
 
 .zoom-btn:not(:disabled):active {
-  background-color: #f0f0f0;
+  background-color: var(--wn-bg-recessed);
 }
 
 .zoom-btn:disabled {
@@ -590,8 +590,8 @@ defineExpose({
 
 .zoom-btn--reset {
   font-size: 11px;
-  color: #666;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  color: var(--wn-ink-soft);
+  border-top: 1px solid var(--wn-glass-border-subtle);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 </style>

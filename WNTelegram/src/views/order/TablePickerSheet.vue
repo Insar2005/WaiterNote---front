@@ -141,15 +141,13 @@ function onPick(t) {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 260;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   width: 100%;
@@ -165,7 +163,7 @@ function onPick(t) {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 
 .sheet-title {
@@ -179,7 +177,7 @@ function onPick(t) {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -190,7 +188,7 @@ function onPick(t) {
   padding: 8px 16px;
   overflow-x: auto;
   scrollbar-width: none;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 
 .halls-tabs::-webkit-scrollbar {
@@ -200,20 +198,20 @@ function onPick(t) {
 .hall-tab {
   flex-shrink: 0;
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--wn-glass-border-subtle);
   padding: 6px 12px;
   border-radius: 16px;
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
   white-space: nowrap;
 }
 
 .hall-tab--active {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  background-color: var(--wn-accent);
+  border-color: var(--wn-accent-text);
   color: #fff;
 }
 
@@ -237,7 +235,7 @@ function onPick(t) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: var(--wn-ink-mute);
   padding: 40px 20px;
 }
 
@@ -306,7 +304,7 @@ function onPick(t) {
   gap: 14px;
   padding: 8px 16px;
   font-size: 11px;
-  color: #888;
+  color: var(--wn-ink-mute);
   flex-wrap: wrap;
 }
 
@@ -324,7 +322,7 @@ function onPick(t) {
 }
 
 .legend-dot--free {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border: 1.5px solid #cfd8dc;
 }
 .legend-dot--occupied {
@@ -338,7 +336,7 @@ function onPick(t) {
 
 .sheet-footer {
   padding: 12px 16px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--wn-glass-border-subtle);
 }
 
 .btn {
@@ -353,8 +351,8 @@ function onPick(t) {
 }
 
 .btn--ghost {
-  background-color: #f5f5f7;
-  color: #666;
+  background-color: var(--wn-bg);
+  color: var(--wn-ink-soft);
 }
 
 .btn--ghost:active {

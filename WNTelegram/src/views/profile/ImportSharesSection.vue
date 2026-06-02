@@ -210,7 +210,7 @@ async function shareLink(share) {
     // its own preview to whichever URL is in the text body, and putting
     // the URL both in `url=` and inside `text=` would duplicate it.
     const shareHref =
-      
+      `https://t.me/share/url?url=${encodeURIComponent(url)}` +
       `&text=${encodeURIComponent(text)}`
     try {
       tg.openTelegramLink(shareHref)
@@ -266,7 +266,7 @@ async function writeToClipboard(text) {
 
 <style scoped>
 .section {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
@@ -276,13 +276,13 @@ async function writeToClipboard(text) {
   margin: 0 0 6px;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .section-hint {
   margin: 0 0 14px;
   font-size: 13px;
-  color: #666;
+  color: var(--wn-ink-soft);
   line-height: 1.4;
 }
 
@@ -300,14 +300,14 @@ async function writeToClipboard(text) {
 .empty-text {
   margin: 0;
   font-size: 13px;
-  color: #999;
+  color: var(--wn-ink-mute);
   text-align: center;
 }
 
 .btn-create {
   width: 100%;
   padding: 12px;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -323,8 +323,8 @@ async function writeToClipboard(text) {
   width: 100%;
   padding: 12px;
   background-color: transparent;
-  color: #4caf50;
-  border: 1px solid #4caf50;
+  color: var(--wn-accent-text);
+  border: 1px solid var(--wn-accent);
   border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
@@ -347,7 +347,7 @@ async function writeToClipboard(text) {
 }
 
 .prompt-sheet {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 100%;
@@ -364,14 +364,14 @@ async function writeToClipboard(text) {
 .prompt-hint {
   margin: 0 0 12px;
   font-size: 13px;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .prompt-input {
   width: 100%;
   padding: 10px 12px;
   font-size: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 8px;
   box-sizing: border-box;
   margin-bottom: 16px;
@@ -393,10 +393,10 @@ async function writeToClipboard(text) {
 }
 .btn--ghost {
   background-color: transparent;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 .btn--primary:disabled {

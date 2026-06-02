@@ -228,13 +228,13 @@ function closeForm() {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   user-select: none;
 }
 
 .archive-toggle input {
-  accent-color: #4caf50;
+  accent-color: var(--wn-accent-text);
 }
 
 .search-wrap {
@@ -246,9 +246,9 @@ function closeForm() {
   width: 100%;
   padding: 10px 36px 10px 14px;
   font-size: 14px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
@@ -256,7 +256,7 @@ function closeForm() {
 }
 
 .search-input:focus {
-  border-color: #4caf50;
+  border-color: var(--wn-accent-text);
 }
 
 .search-clear {
@@ -267,7 +267,7 @@ function closeForm() {
   background: none;
   border: none;
   font-size: 18px;
-  color: #aaa;
+  color: var(--wn-ink-faint);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -290,13 +290,13 @@ function closeForm() {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 18px;
   padding: 6px 12px;
   font-size: 13px;
   font-weight: 500;
-  color: #555;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -304,8 +304,8 @@ function closeForm() {
 }
 
 .tab--active {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  background-color: var(--wn-accent);
+  border-color: var(--wn-accent-text);
   color: #fff;
 }
 
@@ -322,7 +322,7 @@ function closeForm() {
 }
 
 .empty {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   padding: 32px 16px;
   text-align: center;
@@ -334,12 +334,12 @@ function closeForm() {
 
 .empty-text {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 10px 22px;
@@ -364,8 +364,8 @@ function closeForm() {
 .spinner {
   width: 28px;
   height: 28px;
-  border: 3px solid #e0e0e0;
-  border-top-color: #4caf50;
+  border: 3px solid var(--wn-bg-recessed);
+  border-top-color: var(--wn-accent-text);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -381,7 +381,7 @@ function closeForm() {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   font-size: 28px;

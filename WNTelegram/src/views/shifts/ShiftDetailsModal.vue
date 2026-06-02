@@ -115,15 +115,13 @@ async function onDelete() {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 250;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 100%;
@@ -131,20 +129,17 @@ async function onDelete() {
   max-height: 90vh;
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom);
-  /* Pin to viewport bottom — prevents iOS from shifting the modal sideways
-     when the on-screen keyboard appears (a well-known bug with flex-end
-     centring of fixed elements). Bounded on all sides → nothing to slide. */
 }
 
 .sheet-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   z-index: 1;
 }
 
@@ -159,7 +154,7 @@ async function onDelete() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -178,7 +173,7 @@ async function onDelete() {
 }
 
 .block.highlight {
-  background-color: #e8f5e9;
+  background-color: var(--wn-accent-fill);
   padding: 12px 14px;
   border-radius: 12px;
   margin: 4px 0;
@@ -196,7 +191,7 @@ async function onDelete() {
 .block-label {
   font-size: 12px;
   font-weight: 500;
-  color: #888;
+  color: var(--wn-ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
@@ -204,18 +199,18 @@ async function onDelete() {
 .block-value {
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-variant-numeric: tabular-nums;
 }
 
 .block-value--big {
   font-size: 24px;
-  color: #2e7d32;
+  color: var(--wn-accent-text);
 }
 
 .block-sub {
   font-size: 12px;
-  color: #666;
+  color: var(--wn-ink-soft);
   margin-top: 2px;
 }
 

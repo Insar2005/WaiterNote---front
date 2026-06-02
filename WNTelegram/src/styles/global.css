@@ -53,11 +53,18 @@
   --wn-bg-recessed: #ebebef;   /* inputs, slots */
 
   /* === Accent (primary action) === */
-  /* The "main" green used across CTAs. Pastel-ish but readable. */
+  /* The "main" accent used across CTAs. Overridden at runtime by the
+     settings store (Профиль → Персонализация). Default = green. */
   --wn-accent: #4caf50;
   --wn-accent-soft: #a8d5b4;
   --wn-accent-bg: #e8f5ec;
   --wn-accent-ink: #2e7d32;
+
+  /* Theme-adaptive accent surfaces. Components should use these (not the
+     raw -bg / -ink) so they read correctly in dark mode too. */
+  --wn-accent-fill: var(--wn-accent-bg);   /* subtle filled pill / chip bg */
+  --wn-accent-text: var(--wn-accent-ink);  /* readable accent text on bg   */
+  --wn-focus: var(--wn-accent);
 
   /* === Shadows === */
   /* Soft, multi-layered. Use these instead of hand-rolled box-shadows. */
@@ -77,6 +84,45 @@
   --wn-blur-sm: 10px;
   --wn-blur-md: 18px;
   --wn-blur-lg: 30px;
+}
+
+/* ==========================================================================
+   Dark theme — token overrides only.
+   Activated by the settings store via <html data-theme="dark"> (manual)
+   or the resolved value of "Авто" (follows Telegram / OS color scheme).
+   Accent surfaces are derived from --wn-accent with color-mix so they stay
+   correct whatever accent the user picked.
+   ========================================================================== */
+:root[data-theme='dark'] {
+  --wn-glass-light: rgba(28, 28, 36, 0.72);
+  --wn-glass-medium: rgba(28, 28, 36, 0.86);
+  --wn-glass-strong: rgba(28, 28, 36, 0.96);
+  --wn-glass-border: rgba(255, 255, 255, 0.08);
+  --wn-glass-border-subtle: rgba(255, 255, 255, 0.06);
+
+  --wn-ink: #f2f2f6;
+  --wn-ink-soft: #bdbdc7;
+  --wn-ink-mute: #8c8c98;
+  --wn-ink-faint: #5c5c66;
+
+  --wn-bg: #131318;
+  --wn-bg-elevated: #1e1e26;
+  --wn-bg-recessed: #2a2a34;
+
+  --wn-accent-fill: color-mix(in srgb, var(--wn-accent) 24%, #1e1e26);
+  --wn-accent-text: color-mix(in srgb, var(--wn-accent) 62%, #ffffff);
+
+  --wn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --wn-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --wn-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.45);
+  --wn-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+:root {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 /* ==========================================================================
@@ -123,10 +169,21 @@ input, textarea, [contenteditable="true"], [data-selectable] {
 
 /* Default focus ring — clean for accessibility but not ugly */
 :focus-visible {
-  outline: 2px solid #4caf50;
+  outline: 2px solid var(--wn-focus);
   outline-offset: 2px;
 }
 
 button {
   font-family: inherit;
+}
+
+/* Form controls must follow the theme — otherwise default black text is
+   invisible on dark inputs. Components can still override per-field. */
+input, textarea, select {
+  color: var(--wn-ink);
+  caret-color: var(--wn-accent);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--wn-ink-faint);
 }

@@ -95,7 +95,7 @@ async function editComment(item) {
 .empty {
   text-align: center;
   padding: 40px 16px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .empty p {
@@ -106,7 +106,7 @@ async function editComment(item) {
 .empty-sub {
   margin-top: 4px !important;
   font-size: 12px;
-  color: #aaa;
+  color: var(--wn-ink-faint);
 }
 
 .items {
@@ -122,7 +122,7 @@ async function editComment(item) {
   display: flex;
   gap: 10px;
   padding: 10px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 
 .item:last-child {
@@ -144,21 +144,21 @@ async function editComment(item) {
 .item-title {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   line-height: 1.3;
 }
 
 .item-price {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
 
 .item-meta {
   font-size: 11px;
-  color: #888;
+  color: var(--wn-ink-mute);
   margin-bottom: 4px;
 }
 
@@ -173,7 +173,7 @@ async function editComment(item) {
 .add-comment-btn {
   background: none;
   border: none;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   font-size: 12px;
   padding: 0;
   cursor: pointer;
@@ -181,9 +181,9 @@ async function editComment(item) {
 }
 
 .comment-display {
-  background: #f5f5f7;
+  background: var(--wn-bg-recessed);
   border: none;
-  color: #555;
+  color: var(--wn-ink-soft);
   font-size: 12px;
   padding: 4px 8px;
   border-radius: 6px;
@@ -209,26 +209,26 @@ async function editComment(item) {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 1px solid #e0e0e0;
-  background-color: #fff;
+  border: 1px solid var(--wn-glass-border-subtle);
+  background-color: var(--wn-bg-elevated);
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
   font-family: inherit;
-  color: #333;
+  color: var(--wn-ink-soft);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .qty-btn:active {
-  background-color: #f0f0f0;
+  background-color: var(--wn-bg-recessed);
 }
 
 .qty {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   min-width: 18px;
   text-align: center;
   font-variant-numeric: tabular-nums;

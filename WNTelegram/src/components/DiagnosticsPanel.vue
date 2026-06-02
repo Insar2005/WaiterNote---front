@@ -130,7 +130,7 @@ async function copyAll() {
   z-index: 9999;
 }
 .diag-panel {
-  background: #fff;
+  background: var(--wn-bg-elevated);
   width: 100%;
   max-width: 600px;
   max-height: 85vh;
@@ -144,7 +144,7 @@ async function copyAll() {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 .diag-title {
   font-weight: 600;
@@ -154,7 +154,7 @@ async function copyAll() {
   background: none;
   border: none;
   font-size: 18px;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
 }
 .diag-actions {
@@ -169,23 +169,23 @@ async function copyAll() {
   padding: 8px 10px;
   border: none;
   border-radius: 8px;
-  background: #4caf50;
+  background: var(--wn-accent);
   color: #fff;
   font-size: 13px;
   cursor: pointer;
 }
 .diag-btn--ghost {
   background: #eee;
-  color: #555;
+  color: var(--wn-ink-soft);
 }
 .diag-btn:disabled {
   opacity: 0.6;
 }
 .diag-env {
   padding: 8px 16px;
-  background: #f7f7f7;
+  background: var(--wn-bg-recessed);
   font-size: 11px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 .diag-env-row {
   display: flex;
@@ -193,12 +193,12 @@ async function copyAll() {
   padding: 2px 0;
 }
 .diag-env-k {
-  color: #999;
+  color: var(--wn-ink-mute);
   flex-shrink: 0;
   min-width: 90px;
 }
 .diag-env-v {
-  color: #333;
+  color: var(--wn-ink-soft);
   word-break: break-all;
 }
 .diag-log {
@@ -209,36 +209,36 @@ async function copyAll() {
   font-size: 11px;
 }
 .diag-empty {
-  color: #aaa;
+  color: var(--wn-ink-faint);
   text-align: center;
   padding: 20px;
 }
 .diag-line {
   padding: 3px 0;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   word-break: break-all;
 }
 .diag-line--error {
   color: #c62828;
 }
 .diag-line--net {
-  color: #555;
+  color: var(--wn-ink-soft);
 }
 .diag-line--info {
   color: #777;
 }
 .diag-time {
-  color: #aaa;
+  color: var(--wn-ink-faint);
   margin-right: 6px;
 }
 .diag-extra {
   display: block;
-  color: #999;
+  color: var(--wn-ink-mute);
   padding-left: 12px;
 }
 .diag-copied {
   text-align: center;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   font-size: 12px;
   padding: 6px;
 }

@@ -62,7 +62,7 @@ async function select(id) {
 
 .label {
   font-size: 13px;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-weight: 500;
 }
 
@@ -70,20 +70,20 @@ async function select(id) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 8px;
   padding: 6px 10px;
   font-size: 13px;
   font-weight: 500;
-  color: #333;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.15s ease;
 }
 
 .trigger:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .trigger-text {
@@ -96,7 +96,7 @@ async function select(id) {
 .chev {
   font-size: 9px;
   transition: transform 0.18s ease;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .chev--open {
@@ -108,10 +108,10 @@ async function select(id) {
   top: calc(100% + 4px);
   right: 0;
   z-index: 50;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-  border: 1px solid #eee;
+  border: 1px solid var(--wn-glass-border-subtle);
   min-width: 200px;
   overflow: hidden;
 }
@@ -129,7 +129,7 @@ async function select(id) {
   border: none;
   padding: 10px 14px;
   font-size: 14px;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   cursor: pointer;
   text-align: left;
   font-family: inherit;
@@ -138,12 +138,12 @@ async function select(id) {
 
 .menu-item:active,
 .menu-item:hover {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .menu-item--current {
   font-weight: 600;
-  color: #4caf50;
+  color: var(--wn-accent-text);
 }
 
 .menu-item-text {
@@ -154,7 +154,7 @@ async function select(id) {
 }
 
 .menu-check {
-  color: #4caf50;
+  color: var(--wn-accent-text);
   font-size: 14px;
   margin-left: 8px;
 }

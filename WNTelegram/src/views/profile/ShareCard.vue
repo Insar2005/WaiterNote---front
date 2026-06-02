@@ -67,7 +67,7 @@ const timeLeft = computed(() => {
   background-color: #f8f9fa;
   border-radius: 10px;
   padding: 12px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--wn-glass-border-subtle);
 }
 
 .row-top {
@@ -82,11 +82,11 @@ const timeLeft = computed(() => {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 1.5px;
-  color: #1a1a1a;
-  background-color: #fff;
+  color: var(--wn-ink);
+  background-color: var(--wn-bg-elevated);
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--wn-glass-border-subtle);
   cursor: pointer;
   user-select: all;
 }
@@ -95,7 +95,7 @@ const timeLeft = computed(() => {
   background-color: transparent;
   border: none;
   font-size: 18px;
-  color: #999;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -108,7 +108,7 @@ const timeLeft = computed(() => {
   gap: 14px;
   margin-bottom: 10px;
   font-size: 12px;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .actions {
@@ -121,16 +121,16 @@ const timeLeft = computed(() => {
   padding: 8px 6px;
   font-size: 12px;
   font-weight: 500;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 6px;
   cursor: pointer;
   color: #495057;
   white-space: nowrap;
 }
 .btn-action--primary {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  background-color: var(--wn-accent);
+  border-color: var(--wn-accent-text);
   color: #fff;
 }
 .btn-action:active {

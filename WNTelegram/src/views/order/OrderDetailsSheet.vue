@@ -407,15 +407,13 @@ async function onRemoveItem(item) {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 250;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   width: 100%;
@@ -424,10 +422,6 @@ async function onRemoveItem(item) {
   display: flex;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
-  /* Pinned to viewport bottom — prevents iOS keyboard from shifting the
-     sheet sideways. Also blocks underlying map gestures from bleeding
-     through: every touch in the sheet's bounding box hits the sheet
-     first, never the SVG below. */
 }
 
 .sheet-header {
@@ -435,7 +429,7 @@ async function onRemoveItem(item) {
   align-items: flex-start;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   gap: 12px;
 }
 
@@ -452,7 +446,7 @@ async function onRemoveItem(item) {
 
 .sheet-meta {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .close-btn {
@@ -460,7 +454,7 @@ async function onRemoveItem(item) {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -469,11 +463,6 @@ async function onRemoveItem(item) {
   flex: 1;
   overflow-y: auto;
   padding: 12px 20px;
-  /* Restrict to vertical scroll only so iOS doesn't try to interpret a
-     fast vertical swipe as a horizontal one and bleed it through to
-     elements below the sheet (which would otherwise pan the map). */
-  touch-action: pan-y;
-  overscroll-behavior: contain;
 }
 
 .items {
@@ -489,7 +478,7 @@ async function onRemoveItem(item) {
   display: flex;
   gap: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   align-items: flex-start;
 }
 
@@ -547,13 +536,13 @@ async function onRemoveItem(item) {
 .item-title {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   display: flex;
   gap: 6px;
 }
 
 .item-qty {
-  color: #888;
+  color: var(--wn-ink-mute);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -567,7 +556,7 @@ async function onRemoveItem(item) {
 .item-price {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-variant-numeric: tabular-nums;
 }
 
@@ -582,7 +571,7 @@ async function onRemoveItem(item) {
   border: none;
   border-radius: 50%;
   background-color: transparent;
-  color: #aaa;
+  color: var(--wn-ink-faint);
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
@@ -606,7 +595,7 @@ async function onRemoveItem(item) {
 .empty-items {
   padding: 20px;
   text-align: center;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 13px;
 }
 
@@ -617,7 +606,7 @@ async function onRemoveItem(item) {
 .order-comments {
   margin-top: 12px;
   padding: 10px 12px;
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
   border-radius: 8px;
 }
 
@@ -639,7 +628,7 @@ async function onRemoveItem(item) {
   display: block;
   font-size: 11px;
   text-transform: uppercase;
-  color: #888;
+  color: var(--wn-ink-mute);
   letter-spacing: 0.4px;
   font-weight: 500;
   margin-bottom: 4px;
@@ -648,7 +637,7 @@ async function onRemoveItem(item) {
 .order-comments p {
   margin: 0;
   font-size: 13px;
-  color: #333;
+  color: var(--wn-ink-soft);
   white-space: pre-wrap;
 }
 
@@ -662,7 +651,7 @@ async function onRemoveItem(item) {
 
 .tips-label {
   font-size: 13px;
-  color: #555;
+  color: var(--wn-ink-soft);
   font-weight: 500;
 }
 
@@ -677,7 +666,7 @@ async function onRemoveItem(item) {
   width: 100px;
   padding: 8px 10px;
   font-size: 14px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 8px;
   outline: none;
   font-family: inherit;
@@ -686,18 +675,18 @@ async function onRemoveItem(item) {
 }
 
 .tips-input:focus {
-  border-color: #4caf50;
+  border-color: var(--wn-accent-text);
 }
 
 .tips-currency {
   font-size: 13px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .totals {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--wn-glass-border-subtle);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -707,7 +696,7 @@ async function onRemoveItem(item) {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: #555;
+  color: var(--wn-ink-soft);
 }
 
 .totals-row--small {
@@ -718,10 +707,10 @@ async function onRemoveItem(item) {
 .totals-row--main {
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   padding-top: 6px;
   margin-top: 4px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--wn-glass-border-subtle);
 }
 
 .totals-value {
@@ -732,7 +721,7 @@ async function onRemoveItem(item) {
   display: flex;
   gap: 8px;
   padding: 12px 16px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--wn-glass-border-subtle);
 }
 
 .btn {
@@ -756,13 +745,13 @@ async function onRemoveItem(item) {
 }
 
 .btn--ghost {
-  background-color: #f5f5f7;
-  color: #333;
+  background-color: var(--wn-bg);
+  color: var(--wn-ink-soft);
   flex: 0 0 auto;
 }
 
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 
@@ -779,7 +768,7 @@ async function onRemoveItem(item) {
   text-align: left;
   padding: 10px 4px;
   font-size: 13px;
-  color: #555;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
 }

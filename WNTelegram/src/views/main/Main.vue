@@ -132,7 +132,7 @@ function openOrderOnMap(o) {
   margin: 0 0 2px 0;
   font-size: 22px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,7 +141,7 @@ function openOrderOnMap(o) {
 .date {
   margin: 0;
   font-size: 13px;
-  color: #888;
+  color: var(--wn-ink-mute);
   text-transform: capitalize;
 }
 
@@ -152,7 +152,7 @@ function openOrderOnMap(o) {
 .section-title {
   font-size: 13px;
   font-weight: 600;
-  color: #888;
+  color: var(--wn-ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 10px 0;
@@ -160,7 +160,7 @@ function openOrderOnMap(o) {
 
 /* Empty state when no workplace */
 .empty-block {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 16px;
   padding: 28px 20px;
   text-align: center;
@@ -170,18 +170,18 @@ function openOrderOnMap(o) {
   margin: 0 0 6px 0;
   font-size: 17px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .empty-text {
   margin: 0 0 16px 0;
   font-size: 14px;
-  color: #666;
+  color: var(--wn-ink-soft);
   line-height: 1.45;
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 12px 20px;
@@ -202,7 +202,7 @@ function openOrderOnMap(o) {
 
 /* No-shift CTA */
 .cta {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 14px;
   padding: 14px 16px;
   display: flex;
@@ -218,13 +218,13 @@ function openOrderOnMap(o) {
   margin: 0 0 2px 0;
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .cta-sub {
   margin: 0;
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 /* Active orders section header */
@@ -263,7 +263,7 @@ function openOrderOnMap(o) {
 .section-amount {
   font-size: 13px;
   font-weight: 600;
-  color: #2e7d32;
+  color: var(--wn-accent-text);
   font-variant-numeric: tabular-nums;
 }
 

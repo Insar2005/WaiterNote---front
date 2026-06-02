@@ -494,7 +494,7 @@ watch(
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
   /* Leave space for the cart sheet (peek = 180px) */
   padding-bottom: 200px;
 }
@@ -504,8 +504,8 @@ watch(
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -516,7 +516,7 @@ watch(
   border: none;
   font-size: 22px;
   line-height: 1;
-  color: #333;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -547,16 +547,16 @@ watch(
   width: 100%;
   padding: 10px 36px 10px 12px;
   font-size: 14px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
 }
 
 .search-input:focus {
-  border-color: #4caf50;
+  border-color: var(--wn-accent-text);
 }
 
 .search-clear {
@@ -567,7 +567,7 @@ watch(
   background: none;
   border: none;
   font-size: 18px;
-  color: #aaa;
+  color: var(--wn-ink-faint);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -583,11 +583,11 @@ watch(
 .search-count {
   margin: 0 0 4px 0;
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .empty {
-  background: #fff;
+  background: var(--wn-bg-elevated);
   border-radius: 12px;
   padding: 24px 16px;
   text-align: center;
@@ -604,14 +604,14 @@ watch(
 
 .empty p {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
 }
 
 .btn-link {
   background: none;
   border: none;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   font-size: 14px;
   font-weight: 500;
   margin-top: 8px;
@@ -633,14 +633,14 @@ watch(
 
 .cart-count {
   font-size: 13px;
-  color: #666;
+  color: var(--wn-ink-soft);
   font-weight: 500;
 }
 
 .cart-total {
   font-size: 17px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-variant-numeric: tabular-nums;
 }
 
@@ -649,7 +649,7 @@ watch(
   align-items: center;
   gap: 10px;
   width: 100%;
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
   border: none;
   padding: 10px 12px;
   border-radius: 10px;
@@ -659,7 +659,7 @@ watch(
 }
 
 .table-plate:active {
-  background-color: #ebebef;
+  background-color: var(--wn-bg-recessed);
 }
 
 .table-plate--readonly {
@@ -680,17 +680,17 @@ watch(
   flex: 1;
   text-align: left;
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-weight: 500;
 }
 
 .table-plate-text small {
-  color: #888;
+  color: var(--wn-ink-mute);
   font-weight: 400;
 }
 
 .table-plate-text--empty {
-  color: #888;
+  color: var(--wn-ink-mute);
   font-weight: 400;
 }
 
@@ -703,12 +703,12 @@ watch(
 .order-comment {
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--wn-glass-border-subtle);
 }
 
 .order-comment-label {
   font-size: 11px;
-  color: #888;
+  color: var(--wn-ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.4px;
   font-weight: 500;
@@ -720,12 +720,12 @@ watch(
   width: 100%;
   font-size: 13px;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 8px;
   outline: none;
   font-family: inherit;
-  background-color: #fafafa;
-  color: #1a1a1a;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink);
   text-align: left;
   cursor: pointer;
   min-height: 40px;
@@ -734,7 +734,7 @@ watch(
 }
 
 .order-comment-btn:active {
-  background-color: #f0f0f2;
+  background-color: var(--wn-bg-recessed);
 }
 
 .order-comment-btn--empty {
@@ -749,13 +749,13 @@ watch(
 }
 
 .order-comment-placeholder {
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 /* Submit button (in sheet footer) */
 .submit-btn {
   width: 100%;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 14px 20px;

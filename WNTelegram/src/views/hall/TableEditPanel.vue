@@ -344,7 +344,7 @@ function onDuplicate() {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -354,11 +354,11 @@ function onDuplicate() {
   width: 60px;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   padding: 4px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   outline: none;
   font-family: inherit;
   font-variant-numeric: tabular-nums;
@@ -374,8 +374,8 @@ function onDuplicate() {
 }
 
 .title-input:focus {
-  border-color: #4caf50;
-  background-color: #fff;
+  border-color: var(--wn-accent-text);
+  background-color: var(--wn-bg-elevated);
 }
 
 .close-btn {
@@ -383,7 +383,7 @@ function onDuplicate() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -409,7 +409,7 @@ function onDuplicate() {
 
 .field-label {
   font-size: 12px;
-  color: #666;
+  color: var(--wn-ink-soft);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -417,7 +417,7 @@ function onDuplicate() {
 
 .field-value {
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -425,22 +425,22 @@ function onDuplicate() {
 .field-input {
   font-size: 15px;
   padding: 9px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   outline: none;
   font-family: inherit;
   transition: border-color 0.15s ease;
 }
 
 .field-input:focus {
-  border-color: #4caf50;
-  background-color: #fff;
+  border-color: var(--wn-accent-text);
+  background-color: var(--wn-bg-elevated);
 }
 
 .slider {
   width: 100%;
-  accent-color: #4caf50;
+  accent-color: var(--wn-accent-text);
   height: 28px;
   margin: 0;
 }
@@ -457,21 +457,21 @@ function onDuplicate() {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #fafafa;
-  border: 1px solid #ddd;
+  background-color: var(--wn-bg-recessed);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 10px;
   padding: 9px 10px;
   font-size: 12px;
-  color: #555;
+  color: var(--wn-ink-soft);
   font-family: inherit;
   cursor: pointer;
   transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
 .preset-btn--active {
-  background-color: #e8f5e9;
-  border-color: #4caf50;
-  color: #2e7d32;
+  background-color: var(--wn-accent-fill);
+  border-color: var(--wn-accent-text);
+  color: var(--wn-accent-text);
   font-weight: 500;
 }
 
@@ -480,14 +480,14 @@ function onDuplicate() {
   width: 18px;
   height: 18px;
   border: 2px solid currentColor;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
 }
 
 .reset-link {
   align-self: flex-start;
   background: none;
   border: none;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 12px;
   padding: 2px 0;
   cursor: pointer;
@@ -496,7 +496,7 @@ function onDuplicate() {
 }
 
 .reset-link:active {
-  color: #555;
+  color: var(--wn-ink-soft);
 }
 
 .btn {
@@ -524,12 +524,12 @@ function onDuplicate() {
 }
 
 .btn--ghost {
-  background-color: #f5f5f7;
-  color: #1a1a1a;
+  background-color: var(--wn-bg);
+  color: var(--wn-ink);
 }
 
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   flex: 1;
 }

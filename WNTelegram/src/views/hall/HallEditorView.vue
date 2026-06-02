@@ -534,7 +534,7 @@ onUnmounted(() => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
 }
 
 .topbar {
@@ -542,8 +542,8 @@ onUnmounted(() => {
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -556,7 +556,7 @@ onUnmounted(() => {
   border: none;
   font-size: 22px;
   line-height: 1;
-  color: #333;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -575,12 +575,12 @@ onUnmounted(() => {
 
 .icon-btn {
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--wn-glass-border-subtle);
   width: 36px;
   height: 36px;
   border-radius: 8px;
   font-size: 18px;
-  color: #555;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -590,7 +590,7 @@ onUnmounted(() => {
 }
 
 .icon-btn:not(:disabled):active {
-  background-color: #f0f0f0;
+  background-color: var(--wn-bg-recessed);
 }
 
 .icon-btn:disabled {
@@ -603,8 +603,8 @@ onUnmounted(() => {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 
 .halls-tabs {
@@ -613,10 +613,6 @@ onUnmounted(() => {
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  /* Mirror HallSwitcher: explicit pan-x so native horizontal scroll wins
-     over any ancestor touch-action overrides. */
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
 }
 
 .halls-tabs::-webkit-scrollbar {
@@ -626,12 +622,12 @@ onUnmounted(() => {
 .hall-tab {
   flex-shrink: 0;
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--wn-glass-border-subtle);
   padding: 7px 14px;
   border-radius: 18px;
   font-size: 13px;
   font-weight: 500;
-  color: #666;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -639,21 +635,21 @@ onUnmounted(() => {
 }
 
 .hall-tab--active {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  background-color: var(--wn-accent);
+  border-color: var(--wn-accent-text);
   color: #fff;
 }
 
 .hall-tab--add {
   border-style: dashed;
-  color: #4caf50;
-  border-color: #4caf50;
+  color: var(--wn-accent-text);
+  border-color: var(--wn-accent-text);
 }
 
 .hall-edit-btn {
   flex-shrink: 0;
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--wn-glass-border-subtle);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -663,7 +659,7 @@ onUnmounted(() => {
 }
 
 .hall-edit-btn:active {
-  background-color: #f0f0f0;
+  background-color: var(--wn-bg-recessed);
 }
 
 .empty-screen {
@@ -681,17 +677,17 @@ onUnmounted(() => {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .empty-text {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -719,7 +715,7 @@ onUnmounted(() => {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   font-size: 26px;

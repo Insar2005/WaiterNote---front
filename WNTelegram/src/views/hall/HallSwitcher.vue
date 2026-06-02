@@ -28,15 +28,8 @@ defineEmits(['select'])
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   padding: 4px 16px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
-  /* Explicitly allow horizontal panning on this strip. Without this,
-     ancestor `touch-action: none` (set on the page-level for the canvas
-     area) can leak through layout siblings on iOS and block native
-     scroll, so a press-and-drag on a tab feeds the map's pan handler
-     instead of scrolling the tab list. */
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
+  background-color: var(--wn-bg-elevated);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
 }
 
 .switcher::-webkit-scrollbar {
@@ -51,7 +44,7 @@ defineEmits(['select'])
   border-radius: 18px;
   font-size: 13px;
   font-weight: 500;
-  color: #666;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -63,7 +56,7 @@ defineEmits(['select'])
 }
 
 .tab--active {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 </style>

@@ -244,7 +244,7 @@ function formatDate(ts) {
   margin: 0;
   font-size: 17px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .close-btn {
@@ -252,7 +252,7 @@ function formatDate(ts) {
   border: none;
   font-size: 28px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -280,7 +280,7 @@ function formatDate(ts) {
 }
 
 .action-btn:active {
-  background-color: #e8f5ec;
+  background-color: var(--wn-accent-fill);
 }
 
 .action-btn:disabled {
@@ -293,8 +293,8 @@ function formatDate(ts) {
   padding: 16px;
   font-size: 13px;
   line-height: 1.5;
-  color: #888;
-  background-color: #fafafa;
+  color: var(--wn-ink-mute);
+  background-color: var(--wn-bg-recessed);
   border-radius: 10px;
   text-align: center;
 }
@@ -313,8 +313,8 @@ function formatDate(ts) {
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  background-color: #fff;
-  border: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 12px;
 }
 
@@ -326,7 +326,7 @@ function formatDate(ts) {
 .layout-name {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -334,7 +334,7 @@ function formatDate(ts) {
 
 .layout-meta {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
   margin-top: 2px;
 }
 
@@ -371,7 +371,7 @@ function formatDate(ts) {
   height: 32px;
   border: none;
   border-radius: 8px;
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
   font-size: 14px;
   cursor: pointer;
   padding: 0;
@@ -381,7 +381,7 @@ function formatDate(ts) {
 }
 
 .icon-btn:active {
-  background-color: #ebebef;
+  background-color: var(--wn-bg-recessed);
 }
 
 .icon-btn:disabled {

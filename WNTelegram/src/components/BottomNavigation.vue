@@ -201,10 +201,10 @@ onMounted(() => {
   width: 10%;
   height: 30px;
   border-radius: var(--wn-radius-pill);
-  background-color: var(--wn-mint-bg);
+  background-color: var(--wn-accent-fill);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 1px 2px rgba(46, 125, 50, 0.08);
+    0 1px 2px color-mix(in srgb, var(--wn-accent) 18%, transparent);
   transition:
     left 0.32s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.18s ease;
@@ -255,7 +255,7 @@ onMounted(() => {
 /* Active state: icon and label adopt mint-ink color. The pill comes from
    the .indicator element, which is shared and slides between tabs. */
 .nav-item--active {
-  color: var(--wn-mint-ink);
+  color: var(--wn-accent-text);
 }
 
 .nav-item--active .nav-icon {

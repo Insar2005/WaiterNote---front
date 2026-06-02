@@ -63,7 +63,7 @@ function formatRelative(unixSeconds) {
 
 <style scoped>
 .card {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   padding: 14px 16px;
   cursor: pointer;
@@ -74,7 +74,7 @@ function formatRelative(unixSeconds) {
 }
 
 .card:active {
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
   transform: scale(0.99);
 }
 
@@ -102,7 +102,7 @@ function formatRelative(unixSeconds) {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -117,7 +117,7 @@ function formatRelative(unixSeconds) {
   margin: 0;
   font-size: 13px;
   line-height: 1.4;
-  color: #555;
+  color: var(--wn-ink-soft);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -141,8 +141,8 @@ function formatRelative(unixSeconds) {
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  background-color: #f0f0f0;
-  color: #666;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink-soft);
 }
 
 .card-scope--global {
@@ -151,8 +151,8 @@ function formatRelative(unixSeconds) {
 }
 
 .card-scope--workplace {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: var(--wn-accent-fill);
+  color: var(--wn-accent-text);
 }
 
 .card-scope--shift {
@@ -162,7 +162,7 @@ function formatRelative(unixSeconds) {
 
 .card-date {
   font-size: 11px;
-  color: #aaa;
+  color: var(--wn-ink-faint);
   flex-shrink: 0;
 }
 </style>

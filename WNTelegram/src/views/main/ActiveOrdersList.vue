@@ -99,10 +99,10 @@ function pluralize(n, forms) {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   padding: 16px;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 13px;
 }
 
@@ -113,8 +113,8 @@ function pluralize(n, forms) {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: var(--wn-accent-fill);
+  color: var(--wn-accent-text);
   font-size: 13px;
   font-weight: 700;
 }
@@ -129,7 +129,7 @@ function pluralize(n, forms) {
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border: none;
   border-radius: 12px;
   padding: 10px 14px;
@@ -141,7 +141,7 @@ function pluralize(n, forms) {
 }
 
 .row:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .row-table {
@@ -181,7 +181,7 @@ function pluralize(n, forms) {
 .row-title {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -193,7 +193,7 @@ function pluralize(n, forms) {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .row-time {
@@ -201,7 +201,7 @@ function pluralize(n, forms) {
 }
 
 .row-dot {
-  color: #ccc;
+  color: var(--wn-ink-faint);
 }
 
 .row-items {
@@ -226,7 +226,7 @@ function pluralize(n, forms) {
 .row-amount {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }

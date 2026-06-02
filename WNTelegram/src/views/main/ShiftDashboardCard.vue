@@ -46,13 +46,13 @@ const durationText = computed(() => formatDuration(liveDuration.value))
 
 <style scoped>
 .card {
-  background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
+  background: linear-gradient(135deg, var(--wn-accent) 0%, color-mix(in srgb, var(--wn-accent) 85%, #000) 100%);
   color: #fff;
   border-radius: 16px;
   padding: 16px 18px;
   cursor: pointer;
   transition: transform 0.15s ease;
-  box-shadow: 0 4px 14px rgba(76, 175, 80, 0.28);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--wn-accent) 28%, transparent);
 }
 
 .card:active {

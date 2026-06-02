@@ -62,9 +62,9 @@ defineEmits(['select', 'add'])
   flex-shrink: 0;
   padding: 8px 14px;
   border-radius: 20px;
-  border: 1px solid #e0e0e0;
-  background-color: #fff;
-  color: #333;
+  border: 1px solid var(--wn-glass-border-subtle);
+  background-color: var(--wn-bg-elevated);
+  color: var(--wn-ink-soft);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -77,8 +77,8 @@ defineEmits(['select', 'add'])
 }
 
 .chip--active {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  background-color: var(--wn-accent);
+  border-color: var(--wn-accent-text);
   color: #fff;
 }
 
@@ -90,7 +90,7 @@ defineEmits(['select', 'add'])
 .chip-dot {
   font-size: 8px;
   line-height: 1;
-  color: #999;
+  color: var(--wn-ink-mute);
 }
 
 .chip--active .chip-dot {
@@ -100,7 +100,7 @@ defineEmits(['select', 'add'])
 .chip--add {
   font-size: 18px;
   padding: 4px 14px;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   border-style: dashed;
 }
 </style>

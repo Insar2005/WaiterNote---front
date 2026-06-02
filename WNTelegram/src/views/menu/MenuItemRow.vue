@@ -34,14 +34,14 @@ defineEmits(['edit'])
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
 .row:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .row--inactive {
@@ -59,7 +59,7 @@ defineEmits(['edit'])
   gap: 8px;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
   margin-bottom: 2px;
 }
 
@@ -68,8 +68,8 @@ defineEmits(['edit'])
   font-weight: 500;
   padding: 1px 6px;
   border-radius: 4px;
-  background-color: #f0f0f0;
-  color: #888;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -78,7 +78,7 @@ defineEmits(['edit'])
   display: flex;
   gap: 8px;
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -86,7 +86,7 @@ defineEmits(['edit'])
 
 .portion {
   flex-shrink: 0;
-  color: #aaa;
+  color: var(--wn-ink-faint);
 }
 
 .description {
@@ -97,7 +97,7 @@ defineEmits(['edit'])
 .row-price {
   font-size: 15px;
   font-weight: 600;
-  color: #4caf50;
+  color: var(--wn-accent-text);
   flex-shrink: 0;
 }
 </style>

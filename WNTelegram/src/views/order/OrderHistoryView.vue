@@ -184,7 +184,7 @@ function goTo(name) {
   gap: 8px;
   padding: 14px 16px;
   background-color: var(--wn-bg-elevated, #fff);
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -195,7 +195,7 @@ function goTo(name) {
   border: none;
   font-size: 22px;
   line-height: 1;
-  color: #333;
+  color: var(--wn-ink-soft);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -297,7 +297,7 @@ function goTo(name) {
 }
 
 .row:active {
-  background-color: #f5f5f5;
+  background-color: var(--wn-bg-recessed);
 }
 
 .row-time {

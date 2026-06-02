@@ -48,7 +48,7 @@ function cancel() {
 }
 
 .dialog {
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   border-radius: 16px;
   padding: 20px;
   width: 100%;
@@ -60,14 +60,14 @@ function cancel() {
   margin: 0 0 8px 0;
   font-size: 17px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .message {
   margin: 0 0 18px 0;
   font-size: 14px;
   line-height: 1.45;
-  color: #555;
+  color: var(--wn-ink-soft);
 }
 
 .actions {
@@ -92,11 +92,11 @@ function cancel() {
 
 .btn--ghost {
   background-color: transparent;
-  color: #666;
+  color: var(--wn-ink-soft);
 }
 
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 

@@ -187,7 +187,7 @@ function goToHallEditor() {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f7;
+  background-color: var(--wn-bg);
 }
 
 .header {
@@ -196,8 +196,8 @@ function goToHallEditor() {
   justify-content: space-between;
   gap: 12px;
   padding: 16px 16px 12px 16px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   /* Same reasoning as on the canvas: block native scroll for swipes that
      start in this header strip. Buttons inside still receive their clicks. */
   touch-action: none;
@@ -213,12 +213,12 @@ function goToHallEditor() {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .subtitle {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .banner {
@@ -262,17 +262,17 @@ function goToHallEditor() {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .empty-text {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 10px 20px;

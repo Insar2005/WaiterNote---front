@@ -80,7 +80,7 @@ function onClick() {
   cursor: pointer;
 
   background-color: var(--wn-accent, #4caf50);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.35);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--wn-accent) 35%, transparent);
 
   z-index: 60;
   transition:
@@ -103,7 +103,7 @@ function onClick() {
    primary CTA when there's no active shift — same color but the larger
    shadow makes it feel like a "wake up" button. */
 .primary-action--accent {
-  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.5);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--wn-accent) 50%, transparent);
 }
 
 .primary-action-label {
