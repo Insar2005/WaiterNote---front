@@ -210,7 +210,7 @@ async function shareLink(share) {
     // its own preview to whichever URL is in the text body, and putting
     // the URL both in `url=` and inside `text=` would duplicate it.
     const shareHref =
-      `https://t.me/share/url?url=${encodeURIComponent(url)}` +
+      
       `&text=${encodeURIComponent(text)}`
     try {
       tg.openTelegramLink(shareHref)

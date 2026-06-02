@@ -407,12 +407,14 @@ async function onRemoveItem(item) {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 250;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
 }
 
 .sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   background-color: #fff;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
@@ -422,6 +424,10 @@ async function onRemoveItem(item) {
   display: flex;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
+  /* Pinned to viewport bottom — prevents iOS keyboard from shifting the
+     sheet sideways. Also blocks underlying map gestures from bleeding
+     through: every touch in the sheet's bounding box hits the sheet
+     first, never the SVG below. */
 }
 
 .sheet-header {
@@ -463,6 +469,11 @@ async function onRemoveItem(item) {
   flex: 1;
   overflow-y: auto;
   padding: 12px 20px;
+  /* Restrict to vertical scroll only so iOS doesn't try to interpret a
+     fast vertical swipe as a horizontal one and bleed it through to
+     elements below the sheet (which would otherwise pan the map). */
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .items {

@@ -613,6 +613,10 @@ onUnmounted(() => {
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
+  /* Mirror HallSwitcher: explicit pan-x so native horizontal scroll wins
+     over any ancestor touch-action overrides. */
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
 }
 
 .halls-tabs::-webkit-scrollbar {

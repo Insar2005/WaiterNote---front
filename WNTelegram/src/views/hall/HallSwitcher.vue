@@ -30,6 +30,13 @@ defineEmits(['select'])
   padding: 4px 16px;
   background-color: #fff;
   border-bottom: 1px solid #eee;
+  /* Explicitly allow horizontal panning on this strip. Without this,
+     ancestor `touch-action: none` (set on the page-level for the canvas
+     area) can leak through layout siblings on iOS and block native
+     scroll, so a press-and-drag on a tab feeds the map's pan handler
+     instead of scrolling the tab list. */
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
 }
 
 .switcher::-webkit-scrollbar {

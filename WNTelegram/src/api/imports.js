@@ -41,13 +41,21 @@ export const importsApi = {
       ? mockUnsupported('Предпросмотр недоступен.')
       : apiGet(`/import/${code}/preview`)
   },
-  apply(code, { target_workplace_id, hall_ids = [], category_ids = [] }) {
+  apply(code, {
+    target_workplace_id,
+    hall_ids = [],
+    category_ids = [],
+    replace_halls = false,
+    replace_categories = false,
+  }) {
     return USE_MOCK
       ? mockUnsupported('Импорт не выполнен.')
       : apiPost(`/import/${code}/apply`, {
           target_workplace_id,
           hall_ids,
           category_ids,
+          replace_halls,
+          replace_categories,
         })
   },
 }

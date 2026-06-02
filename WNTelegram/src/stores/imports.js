@@ -76,11 +76,15 @@ export const useImportsStore = defineStore('imports', () => {
     target_workplace_id,
     hall_ids = [],
     category_ids = [],
+    replace_halls = false,
+    replace_categories = false,
   }) {
     return importsApi.apply(code, {
       target_workplace_id,
       hall_ids,
       category_ids,
+      replace_halls,
+      replace_categories,
     })
   }
 

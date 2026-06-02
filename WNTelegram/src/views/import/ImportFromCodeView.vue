@@ -120,6 +120,45 @@
         <p class="empty">В этом заведении пока нет ни залов, ни меню.</p>
       </section>
 
+      <!-- Replace-existing toggles. Each one is shown only when its
+           corresponding type is in the import scope — there's no point
+           in offering "delete my halls" if you're not importing halls. -->
+      <section
+        v-if="selectedHalls.size > 0 || selectedCategories.size > 0"
+        class="section section--danger-zone"
+      >
+        <label
+          v-if="selectedHalls.size > 0 && !isSelfImport"
+          class="row row--toggle"
+        >
+          <input type="checkbox" v-model="replaceHalls" />
+          <span class="row-main">
+            <span class="row-title">Удалить мои текущие залы</span>
+            <span class="row-meta">
+              Старые залы и столы в твоём заведении будут стёрты перед импортом
+            </span>
+          </span>
+        </label>
+
+        <label
+          v-if="selectedCategories.size > 0 && !isSelfImport"
+          class="row row--toggle"
+        >
+          <input type="checkbox" v-model="replaceCategories" />
+          <span class="row-main">
+            <span class="row-title">Удалить моё текущее меню</span>
+            <span class="row-meta">
+              Старые категории и позиции будут стёрты перед импортом
+            </span>
+          </span>
+        </label>
+
+        <p v-if="isSelfImport" class="self-import-note">
+          Это твоя собственная ссылка — замена недоступна, чтобы случайно
+          не удалить всё.
+        </p>
+      </section>
+
       <!-- Footer action -->
       <footer class="footer">
         <button class="btn btn--ghost" @click="onResetPreview">
@@ -127,6 +166,7 @@
         </button>
         <button
           class="btn btn--primary btn--grow"
+          :class="{ 'btn--danger': replaceHalls || replaceCategories }"
           :disabled="!hasSelection"
           @click="onApply"
         >
@@ -155,6 +195,8 @@ import { useImportsStore } from '@/stores/imports'
 import { useWorkplaceStore } from '@/stores/workplace'
 import { useMenuStore } from '@/stores/menu'
 import { useHallStore } from '@/stores/hall'
+import { useShiftStore } from '@/stores/shift'
+import { useOrderStore } from '@/stores/order'
 import { useUiStore } from '@/stores/ui'
 
 const route = useRoute()
@@ -163,6 +205,8 @@ const imports = useImportsStore()
 const workplace = useWorkplaceStore()
 const menu = useMenuStore()
 const hall = useHallStore()
+const shift = useShiftStore()
+const order = useOrderStore()
 const ui = useUiStore()
 
 // ----- Input state -----
@@ -176,6 +220,13 @@ const applying = ref(false)
 // common case ("import everything") is one tap.
 const selectedHalls = ref(new Set())
 const selectedCategories = ref(new Set())
+
+// Replace-existing toggles. Each is independent and gated on the
+// corresponding selection being non-empty. Off by default — the safe
+// path is additive merge; these checkboxes are for "give me a clean
+// copy of this part".
+const replaceHalls = ref(false)
+const replaceCategories = ref(false)
 
 const preview = computed(() => imports.preview)
 
@@ -211,9 +262,23 @@ const applyLabel = computed(() => {
   if (halls > 0) parts.push(`${halls} ${pluralize(halls, ['зал', 'зала', 'залов'])}`)
   if (cats > 0)
     parts.push(`${cats} ${pluralize(cats, ['категорию', 'категории', 'категорий'])}`)
-  if (parts.length === 0) return 'Импортировать'
-  return `Импортировать ${parts.join(' и ')}`
+  const replacing = replaceHalls.value || replaceCategories.value
+  if (parts.length === 0) return replacing ? 'Заменить' : 'Импортировать'
+  const verb = replacing ? 'Заменить на' : 'Импортировать'
+  return `${verb} ${parts.join(' и ')}`
 })
+
+/**
+ * Self-import detection — when the user imports from a share they
+ * themselves created (target workplace == source workplace). The
+ * replace toggles are hidden in this case, since enabling them would
+ * wipe the very data we'd then try to copy back.
+ */
+const isSelfImport = computed(
+  () =>
+    preview.value?.source_workplace_id != null &&
+    preview.value.source_workplace_id === workplace.currentId,
+)
 
 // ----- Boot: prefill from query (?code=…), focus input -----
 onMounted(() => {
@@ -253,6 +318,8 @@ function onResetPreview() {
   imports.clearPreview()
   selectedHalls.value = new Set()
   selectedCategories.value = new Set()
+  replaceHalls.value = false
+  replaceCategories.value = false
   nextTick(() => codeInputEl.value?.focus?.())
 }
 
@@ -284,6 +351,36 @@ async function onApply() {
     return
   }
 
+  // Strong confirmation when any replace flag is on. We frame this around
+  // actual state — mention the active shift if there is one, since that's
+  // the case where deletion has real consequences (orders lose their
+  // table / menu_item attachment). Otherwise the wording stays calm.
+  const isReplacing = replaceHalls.value || replaceCategories.value
+  if (isReplacing) {
+    const wipes = []
+    if (replaceHalls.value) wipes.push('залы и столы')
+    if (replaceCategories.value) wipes.push('меню')
+
+    const lines = [
+      `Сейчас твои ${wipes.join(' и ')} в «${workplace.current?.title || 'этом заведении'}» будут удалены.`,
+    ]
+    if (shift.isOpen) {
+      lines.push(
+        '⚠️ У тебя открыта смена. Текущие заказы останутся, но потеряют привязку.',
+      )
+    }
+    lines.push('Действие нельзя отменить.')
+
+    const ok = await ui.confirm({
+      title: 'Заменить полностью?',
+      message: lines.join('\n\n'),
+      confirmText: 'Да, заменить',
+      cancelText: 'Отмена',
+      danger: true,
+    })
+    if (!ok) return
+  }
+
   applying.value = true
   try {
     const result = await imports.applyImport({
@@ -291,16 +388,23 @@ async function onApply() {
       target_workplace_id: workplace.currentId,
       hall_ids: Array.from(selectedHalls.value),
       category_ids: Array.from(selectedCategories.value),
+      replace_halls: replaceHalls.value,
+      replace_categories: replaceCategories.value,
     })
 
     // Refresh the target workplace's halls + menu so the imported content
     // shows up immediately if the user navigates straight to those screens.
-    // Done in parallel; ignore errors here — a failed refetch doesn't
-    // change the fact that the import succeeded server-side.
-    await Promise.all([
+    // When any replace flag was on, ALSO refetch orders — the server's
+    // ON DELETE SET NULL means active orders survive but with table_id /
+    // menu_item_id nulled, and the order store needs to see that.
+    const refreshes = [
       hall.fetchAll(workplace.currentId).catch(() => {}),
       menu.fetchAll(workplace.currentId).catch(() => {}),
-    ])
+    ]
+    if (isReplacing && shift.current?.id) {
+      refreshes.push(order.fetchForCurrentShift().catch(() => {}))
+    }
+    await Promise.all(refreshes)
 
     ui.toastSuccess(formatResult(result))
     imports.clearPreview()
@@ -462,6 +566,33 @@ function goBack() {
   font-size: 14px;
 }
 
+/* Danger zone — the "replace my current" checkbox. Tinted background and
+   a warmer border so it visually separates from the safe "what to import"
+   checkboxes above. */
+.section--danger-zone {
+  background-color: #fff8e1;
+  border: 1px solid #ffe082;
+}
+
+.row--toggle {
+  border-bottom: none;
+  padding: 0;
+}
+
+.row--toggle + .row--toggle {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #ffe082;
+}
+
+.self-import-note {
+  margin: 0;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #8a6d3b;
+  line-height: 1.4;
+}
+
 /* Form */
 .field {
   display: block;
@@ -550,6 +681,12 @@ function goBack() {
 }
 .btn--primary:disabled {
   opacity: 0.5;
+}
+/* When the user has armed "replace existing", the primary action becomes
+   destructive — recolor so it's visually clear something serious will
+   happen on tap. */
+.btn--primary.btn--danger {
+  background-color: #d33;
 }
 .btn--ghost {
   background-color: #f0f0f0;

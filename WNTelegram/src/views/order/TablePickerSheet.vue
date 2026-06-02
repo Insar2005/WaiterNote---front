@@ -141,12 +141,14 @@ function onPick(t) {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 260;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
 }
 
 .sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   background-color: #fff;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;

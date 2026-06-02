@@ -130,7 +130,13 @@ export function useSvgInput({ svgRef, getViewBox, callbacks = {} }) {
       startPinch()
     }
 
-    e.target.setPointerCapture?.(e.pointerId)
+    // No setPointerCapture: we already track pointers via global window
+    // listeners (bound below). Capturing on the SVG element makes iOS
+    // route every subsequent pointermove of this pointer back to the SVG
+    // even when the finger drifts off the canvas — which then drives the
+    // pan handler from gestures the user is making on overlay UI (hall
+    // tabs, sheets). Cleaner: let pointer events route naturally; we
+    // filter by pointerId in handlePointerMove anyway.
     bindGlobal()
   }
 
@@ -186,6 +192,19 @@ export function useSvgInput({ svgRef, getViewBox, callbacks = {} }) {
   function handlePointerMove(e) {
     const p = pointers.get(e.pointerId)
     if (!p) return
+
+    // Safety: iOS WebView (notably Telegram's) sometimes drops a
+    // pointerup or pointercancel when the finger leaves a fixed-position
+    // sibling region (sheets, hall tabs strip, etc.). If we see a move
+    // event with no buttons pressed (mouse) or pressure 0 (touch), the
+    // pointer is effectively gone — synthesize an "up" so we release the
+    // pan/drag state instead of dragging the map under whatever the
+    // user is now interacting with.
+    if (e.buttons === 0 && e.pointerType !== 'touch') {
+      handlePointerUp(e)
+      return
+    }
+
     p.lastClient = { x: e.clientX, y: e.clientY }
 
     const dx = p.lastClient.x - p.startClient.x
