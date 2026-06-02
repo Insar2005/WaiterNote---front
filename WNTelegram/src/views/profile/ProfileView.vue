@@ -776,13 +776,13 @@ async function onResetMock() {
 .section--dev {
   margin-top: 32px;
   padding: 16px;
-  background-color: #fff8e1;
-  border: 1px dashed #ffe082;
+  background-color: color-mix(in srgb, var(--wn-warn) 12%, var(--wn-bg-elevated));
+  border: 1px dashed color-mix(in srgb, var(--wn-warn) 45%, var(--wn-bg-elevated));
   border-radius: 12px;
 }
 
 .section--dev .section-title {
-  color: #ef6c00;
+  color: color-mix(in srgb, var(--wn-warn) 72%, var(--wn-ink));
   margin-bottom: 10px;
 }
 
@@ -795,7 +795,7 @@ async function onResetMock() {
 .btn-dev {
   background-color: var(--wn-bg-elevated);
   color: var(--wn-ink-soft);
-  border: 1px solid #ffd54f;
+  border: 1px solid color-mix(in srgb, var(--wn-warn) 40%, var(--wn-bg-elevated));
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 13px;
@@ -806,12 +806,12 @@ async function onResetMock() {
 }
 
 .btn-dev:active {
-  background-color: #fffde7;
+  background-color: var(--wn-bg-recessed);
 }
 
 .btn-dev--danger {
-  border-color: #ffab91;
-  color: #c62828;
+  border-color: color-mix(in srgb, var(--wn-danger) 45%, var(--wn-bg-elevated));
+  color: var(--wn-danger);
 }
 
 .dev-hint {

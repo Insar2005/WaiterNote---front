@@ -251,8 +251,8 @@ function openOrderOnMap(o) {
   height: 18px;
   padding: 0 6px;
   border-radius: 9px;
-  background-color: #ef6c00;
-  color: #fff;
+  background-color: color-mix(in srgb, var(--wn-warn) 18%, var(--wn-bg-elevated));
+  color: color-mix(in srgb, var(--wn-warn) 72%, var(--wn-ink));
   font-size: 11px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;

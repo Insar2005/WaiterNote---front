@@ -68,6 +68,9 @@
 
   /* Neon red for the "ждёт оплаты" table status — always red, theme-independent */
   --wn-danger: #f5334f;
+  /* Semantic hues for badges / chips (note scope, dev zone) */
+  --wn-info: #2f80ed;
+  --wn-warn: #e8830c;
   /* Floor-map grid lines */
   --wn-grid-line: var(--wn-glass-border-subtle);
 
@@ -117,6 +120,8 @@
   --wn-accent-fill: color-mix(in srgb, var(--wn-accent) 24%, #1e1e26);
   --wn-accent-text: color-mix(in srgb, var(--wn-accent) 62%, #ffffff);
   --wn-danger: #ff5168;
+  --wn-info: #5b9bf5;
+  --wn-warn: #f0a445;
 
   --wn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --wn-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45), 0 2px 4px rgba(0, 0, 0, 0.4);

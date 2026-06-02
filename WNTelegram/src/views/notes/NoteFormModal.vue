@@ -306,7 +306,7 @@ async function onDelete() {
 
 .pin-btn--active {
   opacity: 1;
-  background-color: #fff3e0;
+  background-color: color-mix(in srgb, var(--wn-warn) 18%, var(--wn-bg-elevated));
 }
 
 .close-btn {
@@ -431,8 +431,8 @@ async function onDelete() {
 }
 
 .scope-badge--global {
-  background-color: #e3f2fd;
-  color: #1565c0;
+  background-color: color-mix(in srgb, var(--wn-info) 16%, var(--wn-bg-elevated));
+  color: color-mix(in srgb, var(--wn-info) 72%, var(--wn-ink));
 }
 
 .scope-badge--workplace {
@@ -441,8 +441,8 @@ async function onDelete() {
 }
 
 .scope-badge--shift {
-  background-color: #fff3e0;
-  color: #ef6c00;
+  background-color: color-mix(in srgb, var(--wn-warn) 16%, var(--wn-bg-elevated));
+  color: color-mix(in srgb, var(--wn-warn) 72%, var(--wn-ink));
 }
 
 .scope-hint {

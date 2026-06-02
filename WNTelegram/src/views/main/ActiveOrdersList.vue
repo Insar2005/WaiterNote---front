@@ -152,9 +152,9 @@ function pluralize(n, forms) {
   justify-content: center;
   width: 38px;
   height: 38px;
-  background-color: #fff3e0;
+  background-color: color-mix(in srgb, var(--wn-warn) 16%, var(--wn-bg-elevated));
   border-radius: 10px;
-  color: #ef6c00;
+  color: color-mix(in srgb, var(--wn-warn) 72%, var(--wn-ink));
 }
 
 .row-table-label {

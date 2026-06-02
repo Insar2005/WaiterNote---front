@@ -196,31 +196,41 @@ async function onDelete() {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 250;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
 }
 
 .sheet {
-  background-color: var(--wn-bg-elevated);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  background-color: #fff;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
+  /* Explicitly block horizontal scroll. Anything that would overflow
+     horizontally is a bug on our side (e.g. a flex child that didn't get
+     min-width:0); we'd rather see the visual squish than the user being
+     able to swipe sideways and find empty space. */
+  overflow-x: hidden;
   padding-bottom: env(safe-area-inset-bottom);
+  /* Pin to viewport bottom — prevents iOS from shifting the modal sideways
+     when the on-screen keyboard appears (a well-known bug with flex-end
+     centring of fixed elements). Bounded on all sides → nothing to slide. */
 }
 
 .sheet-header {
   position: sticky;
   top: 0;
-  background-color: var(--wn-bg-elevated);
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid var(--wn-glass-border-subtle);
+  border-bottom: 1px solid #eee;
   z-index: 1;
 }
 
@@ -235,7 +245,7 @@ async function onDelete() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: var(--wn-ink-mute);
+  color: #888;
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -251,6 +261,10 @@ async function onDelete() {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* min-width: 0 lets a flex child shrink below its content's intrinsic
+     width. Without this, a <input type="number"> insists on ~150px and
+     pushes its sibling off-screen on narrow phones. */
+  min-width: 0;
 }
 
 .row {
@@ -260,32 +274,41 @@ async function onDelete() {
 
 .field--price {
   flex: 1;
+  min-width: 0;
 }
 
 .field--portion {
   flex: 1;
+  min-width: 0;
 }
 
 .field-label {
   font-size: 12px;
   font-weight: 500;
-  color: var(--wn-ink-soft);
+  color: #666;
 }
 
 .field-input {
   font-size: 15px;
   padding: 10px 12px;
-  border: 1px solid var(--wn-glass-border-subtle);
+  border: 1px solid #ddd;
   border-radius: 10px;
-  background-color: var(--wn-bg-recessed);
+  background-color: #fafafa;
   outline: none;
   transition: border-color 0.15s ease;
   font-family: inherit;
+  /* box-sizing keeps padding+border inside the declared width so a
+     flex: 1 input doesn't overflow its share of the row. */
+  box-sizing: border-box;
+  width: 100%;
+  /* Number inputs default to ~150px min-width in WebKit; override so
+     the input can shrink with its flex parent on narrow screens. */
+  min-width: 0;
 }
 
 .field-input:focus {
-  border-color: var(--wn-accent-text);
-  background-color: var(--wn-bg-elevated);
+  border-color: #4caf50;
+  background-color: #fff;
 }
 
 .field-textarea {
@@ -298,12 +321,12 @@ async function onDelete() {
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: var(--wn-ink-soft);
+  color: #333;
   cursor: pointer;
 }
 
 .checkbox input {
-  accent-color: var(--wn-accent-text);
+  accent-color: #4caf50;
 }
 
 .actions {
@@ -338,11 +361,11 @@ async function onDelete() {
 
 .btn--ghost {
   background-color: transparent;
-  color: var(--wn-ink-soft);
+  color: #666;
 }
 
 .btn--primary {
-  background-color: var(--wn-accent);
+  background-color: #4caf50;
   color: #fff;
 }
 

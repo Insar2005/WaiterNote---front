@@ -64,7 +64,7 @@ const timeLeft = computed(() => {
 
 <style scoped>
 .card {
-  background-color: #f8f9fa;
+  background-color: var(--wn-bg-recessed);
   border-radius: 10px;
   padding: 12px;
   border: 1px solid var(--wn-glass-border-subtle);
@@ -100,7 +100,7 @@ const timeLeft = computed(() => {
   padding: 4px 8px;
 }
 .icon-btn--danger:hover {
-  color: #d33;
+  color: var(--wn-danger);
 }
 
 .meta {
@@ -125,7 +125,7 @@ const timeLeft = computed(() => {
   border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 6px;
   cursor: pointer;
-  color: #495057;
+  color: var(--wn-ink-soft);
   white-space: nowrap;
 }
 .btn-action--primary {
