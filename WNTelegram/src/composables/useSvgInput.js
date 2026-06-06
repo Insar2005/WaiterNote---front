@@ -233,19 +233,38 @@ export function useSvgInput({ svgRef, getViewBox, callbacks = {} }) {
     if (cur.id !== e.pointerId) return
 
     if (cur.type === 'table' && cur.moved) {
-      // Drag table — translate current screen position to SVG via current viewBox.
-      // The consumer should not be moving viewBox during drag, so this is stable.
-      const curSvg = clientToSvg(cur.lastClient.x, cur.lastClient.y)
-      if (!activeDrag) {
-        activeDrag = { tableId: cur.tableId, startSvg: cur.startSvg, lastSvg: curSvg }
-        if (callbacks.onTableDragStart) {
+      // Two flavours of "moved finger on a table":
+      //   1) Editor — drag the table. Consumer supplies onTableDragStart.
+      //   2) Viewer — pan the canvas. Same gesture from the user's POV,
+      //      but no table movement; we want the canvas to follow the finger.
+      // Distinguish by callback presence rather than a flag, since that's
+      // already a reliable signal of which scene we're in.
+      if (callbacks.onTableDragStart) {
+        // Drag table — translate current screen position to SVG via current viewBox.
+        // The consumer should not be moving viewBox during drag, so this is stable.
+        const curSvg = clientToSvg(cur.lastClient.x, cur.lastClient.y)
+        if (!activeDrag) {
+          activeDrag = { tableId: cur.tableId, startSvg: cur.startSvg, lastSvg: curSvg }
           callbacks.onTableDragStart(cur.tableId, cur.startSvg)
         }
+        activeDrag.lastSvg = curSvg
+        pendingDragSvg = curSvg
+        scheduleFrame()
+        return
       }
-      activeDrag.lastSvg = curSvg
-      pendingDragSvg = curSvg
-      scheduleFrame()
-      return
+      // Viewer mode: re-type this pointer to 'empty' so subsequent handling
+      // (and the pointerup tap path) treats it as a pan, not a stale table
+      // tap. Initialize panState from the current position so the first
+      // frame doesn't jump from gesture start.
+      cur.type = 'empty'
+      if (!panState) {
+        panState = {
+          lastClientX: cur.lastClient.x,
+          lastClientY: cur.lastClient.y,
+          vbAtStart: { ...getViewBox() },
+        }
+      }
+      // Fall through to the empty/pan branch below.
     }
 
     if (cur.type === 'empty' && cur.moved) {

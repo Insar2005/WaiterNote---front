@@ -204,7 +204,8 @@ async function onDelete() {
   left: 0;
   right: 0;
   margin: 0 auto;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
+  color: var(--wn-ink);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 100%;
@@ -225,12 +226,12 @@ async function onDelete() {
 .sheet-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
+  background-color: var(--wn-bg-elevated);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 12px 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--wn-glass-border-subtle, rgba(0,0,0,0.08));
   z-index: 1;
 }
 
@@ -238,6 +239,7 @@ async function onDelete() {
   margin: 0;
   font-size: 17px;
   font-weight: 600;
+  color: var(--wn-ink);
 }
 
 .close-btn {
@@ -245,7 +247,7 @@ async function onDelete() {
   border: none;
   font-size: 24px;
   line-height: 1;
-  color: #888;
+  color: var(--wn-ink-mute);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -285,15 +287,16 @@ async function onDelete() {
 .field-label {
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: var(--wn-ink-mute);
 }
 
 .field-input {
   font-size: 15px;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--wn-glass-border-subtle, rgba(0,0,0,0.08));
   border-radius: 10px;
-  background-color: #fafafa;
+  background-color: var(--wn-bg-recessed);
+  color: var(--wn-ink);
   outline: none;
   transition: border-color 0.15s ease;
   font-family: inherit;
@@ -306,9 +309,13 @@ async function onDelete() {
   min-width: 0;
 }
 
+.field-input::placeholder {
+  color: var(--wn-ink-faint);
+}
+
 .field-input:focus {
-  border-color: #4caf50;
-  background-color: #fff;
+  border-color: var(--wn-accent);
+  background-color: var(--wn-bg-elevated);
 }
 
 .field-textarea {
@@ -321,12 +328,12 @@ async function onDelete() {
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: #333;
+  color: var(--wn-ink);
   cursor: pointer;
 }
 
 .checkbox input {
-  accent-color: #4caf50;
+  accent-color: var(--wn-accent);
 }
 
 .actions {
@@ -361,17 +368,17 @@ async function onDelete() {
 
 .btn--ghost {
   background-color: transparent;
-  color: #666;
+  color: var(--wn-ink-mute);
 }
 
 .btn--primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
 }
 
 .btn--danger-ghost {
   background-color: transparent;
-  color: #c62828;
+  color: var(--wn-danger);
   padding: 10px 0;
 }
 

@@ -184,7 +184,14 @@ function goToHallEditor() {
 
 <style scoped>
 .page {
-  min-height: 100vh;
+  /* Lock the page to viewport height — the map is a single-screen surface
+     (header + halls strip + canvas), nothing here should scroll vertically.
+     `100dvh` (dynamic viewport) accounts for the iOS URL bar collapsing;
+     `100vh` is the fallback for older browsers. `overflow: hidden` blocks
+     accidental rubber-band scroll when a gesture overshoots. */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background-color: var(--wn-bg);
@@ -196,8 +203,8 @@ function goToHallEditor() {
   justify-content: space-between;
   gap: 12px;
   padding: 16px 16px 12px 16px;
-  background-color: var(--wn-bg-elevated);
-  border-bottom: 1px solid var(--wn-glass-border-subtle);
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
   /* Same reasoning as on the canvas: block native scroll for swipes that
      start in this header strip. Buttons inside still receive their clicks. */
   touch-action: none;
@@ -213,12 +220,12 @@ function goToHallEditor() {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: var(--wn-ink);
+  color: #1a1a1a;
 }
 
 .subtitle {
   font-size: 12px;
-  color: var(--wn-ink-mute);
+  color: #888;
 }
 
 .banner {
@@ -262,17 +269,17 @@ function goToHallEditor() {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--wn-ink);
+  color: #1a1a1a;
 }
 
 .empty-text {
   margin: 0;
-  color: var(--wn-ink-mute);
+  color: #888;
   font-size: 14px;
 }
 
 .btn-primary {
-  background-color: var(--wn-accent);
+  background-color: #4caf50;
   color: #fff;
   border: none;
   padding: 10px 20px;

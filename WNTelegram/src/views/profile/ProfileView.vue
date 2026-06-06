@@ -1,69 +1,15 @@
 <template>
   <div class="page">
+    <!-- Compact account header — username + Telegram ID. Stays on the
+         root profile screen by design; everything else is drilled into. -->
     <header class="header">
-      <h1 class="title">Профиль</h1>
-      <p class="subtitle">@{{ auth.user?.username || 'без имени' }}</p>
-    </header>
-
-    <!-- Personalization: accent color + theme -->
-    <section class="section">
-      <h2 class="section-title">Персонализация</h2>
-
-      <div class="perso-card">
-        <div class="perso-block">
-          <span class="perso-label">Цвет акцента</span>
-          <div class="swatches">
-            <button
-              v-for="a in accents"
-              :key="a.key"
-              class="swatch"
-              :class="{ 'swatch--active': settings.accentKey === a.key }"
-              :style="{ '--sw': a.accent }"
-              :aria-label="a.label"
-              :aria-pressed="settings.accentKey === a.key"
-              @click="settings.setAccent(a.key)"
-            >
-              <svg
-                v-if="settings.accentKey === a.key"
-                class="swatch-check"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fff"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M5 12.5 10 17.5 19 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="perso-divider" />
-
-        <div class="perso-block">
-          <span class="perso-label">Тема</span>
-          <div class="seg">
-            <button
-              v-for="t in themeOptions"
-              :key="t.key"
-              class="seg-btn"
-              :class="{ 'seg-btn--on': settings.theme === t.key }"
-              @click="settings.setTheme(t.key)"
-            >
-              {{ t.label }}
-            </button>
-          </div>
-          <p class="perso-hint">
-            «Авто» подстраивается под тему Telegram.
-          </p>
+      <div class="header-row">
+        <div class="header-main">
+          <h1 class="title">Профиль</h1>
+          <p class="subtitle">@{{ auth.user?.username || 'без имени' }}</p>
         </div>
       </div>
-    </section>
 
-    <!-- Account: Telegram ID with hide/copy -->
-    <section class="section">
-      <h2 class="section-title">Аккаунт</h2>
       <div class="tg-id-row">
         <div class="tg-id-info">
           <span class="tg-id-label">Telegram ID</span>
@@ -88,17 +34,64 @@
           </button>
         </div>
       </div>
-      <p class="tg-id-hint">
-        ID может понадобиться, чтобы поделиться меню или картой залов
-        с коллегой.
-      </p>
+    </header>
+
+    <!-- Current workplace — clickable to edit. The card-current style
+         from the old workplace list is reused so it feels familiar. -->
+    <section v-if="workplace.current" class="section">
+      <h2 class="section-title">Текущее заведение</h2>
+      <div
+        class="card card--current"
+        @click="openEditCurrentWorkplace"
+        role="button"
+        tabindex="0"
+        @keydown.enter="openEditCurrentWorkplace"
+      >
+        <div class="card-main">
+          <div class="card-title-row">
+            <span class="card-title">{{ workplace.current.title }}</span>
+            <span
+              v-if="workplace.current.my_role !== 'owner'"
+              class="card-badge card-badge--muted"
+            >
+              участник
+            </span>
+          </div>
+          <div class="card-meta">
+            {{ workplace.current.currency }} ·
+            {{ shiftTypeLabel(workplace.current.shift_type_default) }}
+            <template v-if="workplace.current.shift_type_default === 'fixed'">
+              · {{ formatMoney(workplace.current.pay_for_shift_default, workplace.current.currency) }}/смена
+            </template>
+            <template v-else>
+              · {{ workplace.current.service_percent_default }}%
+            </template>
+          </div>
+        </div>
+        <span class="card-chev">›</span>
+      </div>
     </section>
 
-    <!-- Settings of current workplace -->
-    <section v-if="workplace.current" class="section">
-      <h2 class="section-title">Настройки заведения</h2>
+    <!-- Action menu. Each row drills into a sub-screen at /profile/*.
+         Order matters: appearance + menu/hall up top (used often),
+         share + workplaces below (used occasionally), dev tools last. -->
+    <section class="section">
+      <h2 class="section-title">Настройки</h2>
       <div class="list">
-        <button class="action-row" @click="goToMenu">
+        <button class="action-row" @click="go('profile-appearance')">
+          <span class="action-icon">🎨</span>
+          <span class="action-text">
+            <span class="action-name">Персонализация</span>
+            <span class="action-meta">{{ accentLabel }} · {{ themeLabel }}</span>
+          </span>
+          <span class="action-chev">›</span>
+        </button>
+
+        <button
+          v-if="workplace.current"
+          class="action-row"
+          @click="goToMenu"
+        >
           <span class="action-icon">🍽️</span>
           <span class="action-text">
             <span class="action-name">Меню</span>
@@ -107,7 +100,11 @@
           <span class="action-chev">›</span>
         </button>
 
-        <button class="action-row" @click="goToHallEditor">
+        <button
+          v-if="workplace.current"
+          class="action-row"
+          @click="goToHallEditor"
+        >
           <span class="action-icon">🪑</span>
           <span class="action-text">
             <span class="action-name">Карта столов</span>
@@ -115,98 +112,47 @@
           </span>
           <span class="action-chev">›</span>
         </button>
-      </div>
-    </section>
 
-    <!-- Share menu/halls with another workplace's owner -->
-    <ImportSharesSection v-if="workplace.current" />
-
-    <!-- Workplaces list -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="section-title">Заведения</h2>
-        <button class="btn-add" @click="openCreateForm">+ Добавить</button>
-      </div>
-
-      <div v-if="workplace.isEmpty" class="empty">
-        <p class="empty-text">У вас пока нет ни одного заведения.</p>
-        <button class="btn-primary" @click="openCreateForm">Создать первое</button>
-      </div>
-
-      <div v-else class="list">
-        <div
-          v-for="w in workplace.activeList"
-          :key="w.id"
-          class="card"
-          :class="{ 'card--current': w.id === workplace.currentId }"
-          @click="selectWorkplace(w.id)"
+        <button
+          v-if="workplace.current"
+          class="action-row"
+          @click="go('profile-share')"
         >
-          <div class="card-main">
-            <div class="card-title-row">
-              <span class="card-title">{{ w.title }}</span>
-              <span v-if="w.id === workplace.currentId" class="card-badge">текущее</span>
-              <span v-if="w.my_role !== 'owner'" class="card-badge card-badge--muted">
-                участник
-              </span>
-            </div>
-            <div class="card-meta">
-              {{ w.currency }} · {{ shiftTypeLabel(w.shift_type_default) }}
-              <template v-if="w.shift_type_default === 'fixed'">
-                · {{ formatMoney(w.pay_for_shift_default, w.currency) }}/смена
-              </template>
-              <template v-else>
-                · {{ w.service_percent_default }}%
-              </template>
-            </div>
-          </div>
-          <button
-            v-if="w.my_role === 'owner'"
-            class="card-action"
-            @click.stop="openEditForm(w)"
-            aria-label="Редактировать"
-          >
-            ✏️
-          </button>
-        </div>
-      </div>
-    </section>
+          <span class="action-icon">🔗</span>
+          <span class="action-text">
+            <span class="action-name">Поделиться меню и залами</span>
+            <span class="action-meta">Создать ссылку или импортировать</span>
+          </span>
+          <span class="action-chev">›</span>
+        </button>
 
-    <section v-if="workplace.archivedList.length > 0" class="section">
-      <h2 class="section-title">Архив</h2>
-      <div class="list">
-        <div
-          v-for="w in workplace.archivedList"
-          :key="w.id"
-          class="card card--archived"
+        <button class="action-row" @click="go('profile-workplaces')">
+          <span class="action-icon">🏢</span>
+          <span class="action-text">
+            <span class="action-name">Все заведения</span>
+            <span class="action-meta">{{ workplacesSummary }}</span>
+          </span>
+          <span class="action-chev">›</span>
+        </button>
+
+        <button
+          v-if="showDevTools"
+          class="action-row"
+          @click="go('profile-dev')"
         >
-          <div class="card-main">
-            <span class="card-title">{{ w.title }}</span>
-          </div>
-          <button
-            v-if="w.my_role === 'owner'"
-            class="card-action"
-            @click="unarchiveWorkplace(w.id)"
-          >
-            ↻
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Dev tools (mock mode only, dev build only) -->
-    <section v-if="showDevTools" class="section section--dev">
-      <h2 class="section-title">Dev</h2>
-      <div class="dev-actions">
-        <button class="btn-dev" @click="onSeed">📦 Заполнить демо-данными</button>
-        <button class="btn-dev btn-dev--danger" @click="onResetMock">
-          🗑 Сбросить mock БД
+          <span class="action-icon">🛠</span>
+          <span class="action-text">
+            <span class="action-name">Dev tools</span>
+            <span class="action-meta">mock-режим</span>
+          </span>
+          <span class="action-chev">›</span>
         </button>
       </div>
-      <p class="dev-hint">
-        Эти кнопки видны только в dev-сборке при USE_MOCK=true.
-      </p>
     </section>
 
+    <!-- Edit-current-workplace modal lives here because the current
+         workplace card is the entry point. Other workplace editing
+         happens inside the Workplaces sub-screen. -->
     <WorkplaceFormModal
       v-if="formVisible"
       :initial="editingWorkplace"
@@ -224,12 +170,10 @@ import { useWorkplaceStore } from '@/stores/workplace'
 import { useMenuStore } from '@/stores/menu'
 import { useHallStore } from '@/stores/hall'
 import { useUiStore } from '@/stores/ui'
-import { useSettingsStore } from '@/stores/settings'
-import { ACCENTS, THEME_OPTIONS } from '@/stores/settings'
+import { useSettingsStore, ACCENTS, THEME_OPTIONS } from '@/stores/settings'
 import { formatMoney } from '@/utils/format'
 import { USE_MOCK } from '@/api/client'
 import WorkplaceFormModal from '@/components/WorkplaceFormModal.vue'
-import ImportSharesSection from './ImportSharesSection.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -239,16 +183,10 @@ const hall = useHallStore()
 const ui = useUiStore()
 const settings = useSettingsStore()
 
-// Appearance options for the Персонализация section
-const accents = ACCENTS
-const themeOptions = THEME_OPTIONS
-
 const formVisible = ref(false)
 const editingWorkplace = ref(null)
 
-// --- Telegram ID display ---
-// Hidden by default — the ID is semi-private. The user can reveal it
-// (e.g. to read it aloud) or copy it straight to the clipboard.
+// === Telegram ID ===
 const idRevealed = ref(false)
 
 const tgId = computed(() => {
@@ -256,7 +194,6 @@ const tgId = computed(() => {
   return id != null ? String(id) : '—'
 })
 
-/** Masked form: keep the same character count so the layout doesn't jump. */
 const maskedId = computed(() => {
   const len = tgId.value.length
   return len > 0 && tgId.value !== '—' ? '•'.repeat(len) : '—'
@@ -269,69 +206,39 @@ async function copyId() {
     await navigator.clipboard.writeText(value)
     ui.toastSuccess('ID скопирован')
   } catch {
-    // clipboard API can fail (permissions, insecure context) — fall back
-    // to revealing the ID so the user can copy it manually.
     idRevealed.value = true
     ui.toastInfo('Не удалось скопировать — ID показан, скопируйте вручную')
   }
 }
 
-// Show Dev tools whenever the app is running on mock data —
-// useful both in `npm run dev` and in deployed demo builds where
-// VITE_USE_MOCK=true. We deliberately don't gate on import.meta.env.DEV
-// so testers can seed/reset the local DB on the deployed Firebase build.
-const showDevTools = computed(() => USE_MOCK)
+// === Action meta strings ===
+const accentLabel = computed(() => {
+  const a = ACCENTS.find((x) => x.key === settings.accentKey)
+  return a ? a.label : 'Зелёный'
+})
 
-function openCreateForm() {
-  editingWorkplace.value = null
-  formVisible.value = true
-}
-
-function openEditForm(w) {
-  editingWorkplace.value = w
-  formVisible.value = true
-}
-
-function closeForm() {
-  formVisible.value = false
-  editingWorkplace.value = null
-}
-
-async function selectWorkplace(id) {
-  if (id === workplace.currentId) return
-  try {
-    await workplace.setCurrent(id)
-  } catch (e) {
-    ui.toastError(e.message)
-  }
-}
-
-async function unarchiveWorkplace(id) {
-  try {
-    await workplace.unarchive(id)
-    ui.toastSuccess('Восстановлено')
-  } catch (e) {
-    ui.toastError(e.message)
-  }
-}
-
-function shiftTypeLabel(type) {
-  return type === 'percent' ? 'процент' : 'фикс'
-}
-
-function goToMenu() {
-  router.push({ name: 'menu' })
-}
-
-function goToHallEditor() {
-  router.push({ name: 'hall-editor' })
-}
+const themeLabel = computed(() => {
+  const t = THEME_OPTIONS.find((x) => x.key === settings.theme)
+  return t ? t.label : 'Авто'
+})
 
 const hallSummary = computed(() => {
-  const halls = hall.sortedHalls.length
-  const tables = hall.tables.length
-  if (!halls) return 'нет залов'
+  const halls = hall.halls?.length ?? 0
+  // hall.tables is the flat list of all tables across all halls in the
+  // current workplace, kept by the hall store. Avoids walking per-hall
+  // arrays which the store doesn't normalize.
+  const tables = hall.tables?.length ?? 0
+  if (halls === 0) return 'нет залов'
   return `${halls} ${pluralize(halls, ['зал', 'зала', 'залов'])}, ${tables} ${pluralize(tables, ['стол', 'стола', 'столов'])}`
+})
+
+const workplacesSummary = computed(() => {
+  const active = workplace.activeList?.length ?? 0
+  const archived = workplace.archivedList?.length ?? 0
+  if (active === 0 && archived === 0) return 'пусто'
+  const parts = [`${active} ${pluralize(active, ['активное', 'активных', 'активных'])}`]
+  if (archived > 0) parts.push(`+ ${archived} в архиве`)
+  return parts.join(' ')
 })
 
 function pluralize(n, forms) {
@@ -343,44 +250,46 @@ function pluralize(n, forms) {
   return forms[2]
 }
 
-// === Dev actions ===
-
-async function onSeed() {
-  const ok = await ui.confirm({
-    title: 'Заполнить демо-данными?',
-    message: 'Будет создано: заведение, зал с 5 столами, меню, открытая смена и пара заказов. Существующие данные сохранятся.',
-    confirmText: 'Заполнить',
-  })
-  if (!ok) return
-
-  try {
-    const { seedDemo } = await import('@/mocks/db')
-    seedDemo()
-    ui.toastSuccess('Демо-данные созданы. Перезагрузка…')
-    setTimeout(() => window.location.reload(), 600)
-  } catch (e) {
-    ui.toastError(e.message || 'Не удалось заполнить демо')
-  }
+function shiftTypeLabel(t) {
+  return t === 'fixed' ? 'фикс' : 'процент'
 }
 
-async function onResetMock() {
-  const ok = await ui.confirm({
-    title: 'Сбросить всё?',
-    message: 'Все workplace, столы, меню, смены и заметки будут удалены. Это локальная mock БД.',
-    confirmText: 'Сбросить',
-    danger: true,
-  })
-  if (!ok) return
-
-  try {
-    const { resetDb } = await import('@/mocks/db')
-    resetDb()
-    ui.toastSuccess('Сброшено. Перезагрузка…')
-    setTimeout(() => window.location.reload(), 600)
-  } catch (e) {
-    ui.toastError(e.message)
-  }
+// === Navigation ===
+function go(name) {
+  router.push({ name })
 }
+
+function goToMenu() {
+  router.push({ name: 'menu' })
+}
+
+function goToHallEditor() {
+  router.push({ name: 'hall-editor' })
+}
+
+// === Current workplace editing ===
+function openEditCurrentWorkplace() {
+  if (!workplace.current) return
+  // Members can't edit — show a friendly note instead of opening a
+  // form they can't submit (the modal handles the lockout, but the
+  // tap feedback is nicer this way).
+  if (workplace.current.my_role !== 'owner') {
+    ui.toastInfo('Редактировать заведение может только владелец')
+    return
+  }
+  editingWorkplace.value = workplace.current
+  formVisible.value = true
+}
+
+function closeForm() {
+  formVisible.value = false
+  editingWorkplace.value = null
+}
+
+// === Dev tools visibility ===
+// Mirror the previous gate: dev tools entry visible whenever the app
+// is running on mock data, both in `npm run dev` and deployed demo builds.
+const showDevTools = computed(() => USE_MOCK)
 </script>
 
 <style scoped>
@@ -388,16 +297,33 @@ async function onResetMock() {
   padding: 16px;
   max-width: 600px;
   margin: 0 auto;
+  background-color: var(--wn-bg);
+  min-height: 100vh;
+  color: var(--wn-ink);
 }
 
 .header {
   margin-bottom: 24px;
 }
 
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .title {
   font-size: 26px;
   font-weight: 700;
-  margin: 0 0 4px 0;
+  margin: 0;
+  color: var(--wn-ink);
 }
 
 .subtitle {
@@ -406,138 +332,19 @@ async function onResetMock() {
   font-size: 14px;
 }
 
-/* === Personalization === */
-.perso-card {
-  background-color: var(--wn-bg-elevated);
-  border: 1px solid var(--wn-glass-border-subtle);
-  border-radius: var(--wn-radius-lg);
-  box-shadow: var(--wn-shadow-sm);
-  overflow: hidden;
-}
-
-.perso-block {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.perso-divider {
-  height: 1px;
-  background-color: var(--wn-glass-border-subtle);
-}
-
-.perso-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--wn-ink-soft);
-}
-
-.swatches {
-  display: flex;
-  gap: 12px;
-}
-
-.swatch {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--wn-radius-pill);
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  background-color: var(--sw);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px color-mix(in srgb, var(--sw) 45%, transparent);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  transition: transform 0.15s ease, outline-color 0.15s ease;
-}
-
-.swatch:active {
-  transform: scale(0.9);
-}
-
-.swatch--active {
-  outline-color: var(--sw);
-}
-
-.swatch-check {
-  width: 22px;
-  height: 22px;
-}
-
-.seg {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  background-color: var(--wn-bg-recessed);
-  border-radius: var(--wn-radius-pill);
-}
-
-.seg-btn {
-  flex: 1;
-  border: none;
-  cursor: pointer;
-  padding: 9px 8px;
-  border-radius: var(--wn-radius-pill);
-  background: transparent;
-  color: var(--wn-ink-soft);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background-color 0.18s ease, color 0.18s ease;
-}
-
-.seg-btn--on {
-  background-color: var(--wn-bg-elevated);
-  color: var(--wn-accent-text);
-  box-shadow: var(--wn-shadow-sm);
-}
-
-.perso-hint {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--wn-ink-mute);
-}
-
-.section {
-  margin-bottom: 28px;
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 12px 0;
-  color: var(--wn-ink);
-}
-
-.section-header .section-title {
-  margin-bottom: 0;
-}
-
-/* Telegram ID block */
+/* === Telegram ID row === */
 .tg-id-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 14px;
   background-color: var(--wn-bg-elevated);
   border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .tg-id-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -545,16 +352,17 @@ async function onResetMock() {
 }
 
 .tg-id-label {
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--wn-ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .tg-id-value {
-  font-size: 16px;
-  font-weight: 600;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 14px;
   color: var(--wn-ink);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -562,160 +370,54 @@ async function onResetMock() {
 
 .tg-id-actions {
   display: flex;
-  gap: 6px;
-  flex-shrink: 0;
+  gap: 4px;
 }
 
 .tg-id-btn {
-  width: 38px;
-  height: 38px;
+  background: none;
   border: none;
-  border-radius: 10px;
-  background-color: var(--wn-bg-recessed);
   font-size: 16px;
+  padding: 6px 8px;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.15s ease;
+  border-radius: 6px;
 }
-
 .tg-id-btn:active {
-  background-color: #e3e3e6;
+  background-color: var(--wn-bg-recessed);
 }
 
-.tg-id-hint {
-  margin: 8px 2px 0;
+/* === Sections === */
+.section {
+  margin-bottom: 24px;
+}
+
+.section-title {
   font-size: 12px;
-  line-height: 1.4;
+  font-weight: 600;
   color: var(--wn-ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px 0;
 }
 
-.btn-add {
-  background-color: transparent;
-  border: 1px solid var(--wn-accent);
-  color: var(--wn-accent-text);
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.btn-add:active {
-  opacity: 0.7;
-}
-
-.btn-primary {
-  background-color: var(--wn-accent);
-  color: #fff;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 32px 16px;
+/* === Current workplace card === */
+.card {
   background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
   border-radius: 12px;
-  text-align: center;
-}
-
-.empty-text {
-  margin: 0;
-  color: var(--wn-ink-soft);
-  font-size: 14px;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Action rows (Menu, Halls editor etc.) */
-.action-row {
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 100%;
-  background-color: var(--wn-bg-elevated);
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: none;
   cursor: pointer;
-  text-align: left;
-  font-family: inherit;
   transition: background-color 0.15s ease;
 }
 
-.action-row:active {
-  background-color: var(--wn-bg-recessed);
-}
-
-.action-row--disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.action-icon {
-  font-size: 22px;
-}
-
-.action-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.action-name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--wn-ink);
-}
-
-.action-meta {
-  font-size: 12px;
-  color: var(--wn-ink-mute);
-}
-
-.action-chev {
-  font-size: 18px;
-  color: var(--wn-ink-faint);
-}
-
-/* Workplace cards */
-.card {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--wn-bg-elevated);
-  padding: 14px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: border-color 0.15s ease;
-}
-
 .card:active {
-  opacity: 0.85;
+  background-color: var(--wn-bg-recessed);
 }
 
 .card--current {
   border-color: var(--wn-accent);
-}
-
-.card--archived {
-  opacity: 0.7;
-  cursor: default;
 }
 
 .card-main {
@@ -727,7 +429,6 @@ async function onResetMock() {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
   margin-bottom: 4px;
 }
 
@@ -735,17 +436,19 @@ async function onResetMock() {
   font-size: 15px;
   font-weight: 600;
   color: var(--wn-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-badge {
   font-size: 11px;
-  font-weight: 500;
   padding: 2px 8px;
-  border-radius: 6px;
+  border-radius: 999px;
   background-color: var(--wn-accent-fill);
   color: var(--wn-accent-text);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .card-badge--muted {
@@ -758,66 +461,77 @@ async function onResetMock() {
   color: var(--wn-ink-mute);
 }
 
-.card-action {
-  background: none;
-  border: none;
-  padding: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 8px;
-  flex-shrink: 0;
+.card-chev {
+  font-size: 22px;
+  color: var(--wn-ink-mute);
+  margin-left: 4px;
 }
 
-.card-action:active {
-  background-color: var(--wn-bg-recessed);
-}
-
-/* === Dev tools === */
-.section--dev {
-  margin-top: 32px;
-  padding: 16px;
-  background-color: color-mix(in srgb, var(--wn-warn) 12%, var(--wn-bg-elevated));
-  border: 1px dashed color-mix(in srgb, var(--wn-warn) 45%, var(--wn-bg-elevated));
-  border-radius: 12px;
-}
-
-.section--dev .section-title {
-  color: color-mix(in srgb, var(--wn-warn) 72%, var(--wn-ink));
-  margin-bottom: 10px;
-}
-
-.dev-actions {
+/* === Action menu list === */
+.list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  background-color: var(--wn-bg-elevated);
+  border: 1px solid var(--wn-glass-border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.btn-dev {
-  background-color: var(--wn-bg-elevated);
-  color: var(--wn-ink-soft);
-  border: 1px solid color-mix(in srgb, var(--wn-warn) 40%, var(--wn-bg-elevated));
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: left;
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   cursor: pointer;
   font-family: inherit;
+  text-align: left;
+  width: 100%;
+  transition: background-color 0.15s ease;
 }
 
-.btn-dev:active {
+.action-row:last-child {
+  border-bottom: none;
+}
+
+.action-row:active {
   background-color: var(--wn-bg-recessed);
 }
 
-.btn-dev--danger {
-  border-color: color-mix(in srgb, var(--wn-danger) 45%, var(--wn-bg-elevated));
-  color: var(--wn-danger);
+.action-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
 }
 
-.dev-hint {
-  margin: 8px 0 0 0;
-  font-size: 11px;
+.action-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.action-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--wn-ink);
+}
+
+.action-meta {
+  font-size: 12px;
   color: var(--wn-ink-mute);
-  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action-chev {
+  font-size: 20px;
+  color: var(--wn-ink-mute);
+  flex-shrink: 0;
 }
 </style>

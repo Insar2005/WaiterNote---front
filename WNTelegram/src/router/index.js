@@ -70,6 +70,34 @@ const router = createRouter({
       component: () => import('@/views/import/ImportFromCodeView.vue'),
       meta: { hideBottomNav: true },
     },
+
+    // === Profile sub-screens ===
+    // Each lives at /profile/* with the bottom nav hidden, so they feel
+    // like drill-downs rather than primary tabs. Back goes to /profile.
+    {
+      path: '/profile/appearance',
+      name: 'profile-appearance',
+      component: () => import('@/views/profile/AppearanceView.vue'),
+      meta: { hideBottomNav: true },
+    },
+    {
+      path: '/profile/share',
+      name: 'profile-share',
+      component: () => import('@/views/profile/ShareView.vue'),
+      meta: { hideBottomNav: true },
+    },
+    {
+      path: '/profile/workplaces',
+      name: 'profile-workplaces',
+      component: () => import('@/views/profile/WorkplacesView.vue'),
+      meta: { hideBottomNav: true },
+    },
+    {
+      path: '/profile/dev',
+      name: 'profile-dev',
+      component: () => import('@/views/profile/DevToolsView.vue'),
+      meta: { hideBottomNav: true },
+    },
   ],
 })
 

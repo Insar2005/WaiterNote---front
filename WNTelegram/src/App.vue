@@ -93,6 +93,90 @@ function deepLinkImportCode() {
   return code.length >= 4 ? code : null
 }
 
+/**
+ * Navigation memory: remembers which screen the user was on, so a page
+ * reload (F5, swipe-down-to-refresh in Telegram, etc.) brings them back
+ * to where they were instead of dumping them on /home. A fresh launch
+ * of the Mini App (no remembered route) still defaults to /home — the
+ * expected entry point.
+ *
+ * Why sessionStorage, not localStorage:
+ *   - sessionStorage is wiped when the tab / Mini App closes, which is
+ *     exactly the "fresh launch" boundary we want.
+ *   - localStorage would persist forever — a user who closed the app
+ *     three days ago in /shifts shouldn't reopen there now.
+ *
+ * Why we still confirm with the Performance API:
+ *   - Some Telegram WebView versions on Android keep sessionStorage
+ *     alive across full closes (treating it like a long-lived tab).
+ *     Cross-checking against navigation.type === 'reload' makes restore
+ *     conditional on this load actually being a reload.
+ */
+const NAV_MEMORY_KEY = 'wn:lastRoute'
+
+// Routes that should NEVER be auto-restored on reload — they're either
+// transient (deep-link landing pages, gates) or unsafe to land on cold
+// (e.g. order-builder needs an in-progress draft to make sense).
+const NON_RESTORABLE_ROUTES = new Set([
+  'onboarding',
+  'bot-required',
+  'import',          // deep-link only — fresh code or back to home
+  'order-builder',   // needs a draft; cold-restore would show empty cart
+])
+
+function rememberRoute(routeObj) {
+  try {
+    if (!routeObj?.name) return
+    if (NON_RESTORABLE_ROUTES.has(routeObj.name)) return
+    sessionStorage.setItem(
+      NAV_MEMORY_KEY,
+      JSON.stringify({
+        name: routeObj.name,
+        params: routeObj.params || {},
+        query: routeObj.query || {},
+      }),
+    )
+  } catch { /* storage unavailable — silent no-op */ }
+}
+
+/**
+ * Is the current page load a reload (vs a fresh navigation)?
+ * Performance API gives a definitive answer; we treat absence of the
+ * data as "not a reload" to err on the conservative side (default to
+ * home rather than surprise the user with a stale screen).
+ */
+function isPageReload() {
+  try {
+    const nav = performance.getEntriesByType?.('navigation')?.[0]
+    return nav?.type === 'reload'
+  } catch {
+    return false
+  }
+}
+
+function readRememberedRoute() {
+  try {
+    const raw = sessionStorage.getItem(NAV_MEMORY_KEY)
+    if (!raw) return null
+    const data = JSON.parse(raw)
+    if (!data?.name || NON_RESTORABLE_ROUTES.has(data.name)) return null
+    return data
+  } catch {
+    return null
+  }
+}
+
+// Track every route change to keep the "where I was" memory fresh.
+// Skip the very first navigation triggered by boot() routing the user —
+// that gets stored on its own once boot completes. Subsequent normal
+// router-view changes all flow through this watcher.
+watch(
+  () => route.fullPath,
+  () => {
+    if (ready.value) rememberRoute(route)
+  },
+)
+
 async function boot() {
   bootError.value = null
   ready.value = false
@@ -153,27 +237,49 @@ async function boot() {
         order.fetchForCurrentShift().catch(() => {})
       }
     }
-    // Routing decision at app start:
-    //  - First-time users (onboarding not completed) → onboarding flow.
-    //  - Deep-linked import (Mini App opened via t.me/<bot>?startapp=import_<code>)
-    //    → /import with the code prefilled, no matter where the hash router
-    //    thinks we should go.
-    //  - Everyone else → home screen, regardless of the route the Telegram
-    //    hash remembers from a previous session (predictable entry point).
+
+    // ===== Routing decision at app start =====
+    // Priority order:
+    //   1. Onboarding incomplete → onboarding flow (everything else waits).
+    //   2. Deep-linked import (Telegram start_param) → /import with code.
+    //   3. Page reload + remembered route → restore where the user was.
+    //   4. Fresh launch (or no memory) → /home, the predictable entry point.
     if (!auth.isOnboardingCompleted) {
       if (route.name !== 'onboarding') {
         router.replace({ name: 'onboarding' })
       }
     } else if (deepLinkImportCode()) {
-      // start_param "import_XYZ" → /import?code=XYZ
+      // start_param "import_XYZ" → /import?code=XYZ (overrides memory —
+      // a deep link is an explicit user intent we shouldn't shadow).
       router.replace({
         name: 'import',
         query: { code: deepLinkImportCode() },
       })
-    } else if (route.name !== 'home') {
-      router.replace({ name: 'home' })
+    } else {
+      const remembered = isPageReload() ? readRememberedRoute() : null
+      if (remembered) {
+        // Restore. router.resolve verifies the remembered name still
+        // exists in the route table — if a route was removed in a code
+        // update the user just lands on home instead of seeing a blank
+        // page.
+        const target = {
+          name: remembered.name,
+          params: remembered.params,
+          query: remembered.query,
+        }
+        if (router.hasRoute(remembered.name)) {
+          router.replace(target)
+        } else if (route.name !== 'home') {
+          router.replace({ name: 'home' })
+        }
+      } else if (route.name !== 'home') {
+        router.replace({ name: 'home' })
+      }
     }
     ready.value = true
+    // Persist whatever route boot() ended up on, so an immediate reload
+    // before the user navigates anywhere keeps the same screen.
+    rememberRoute(route)
   } catch (e) {
     bootError.value = e.message || 'Не удалось загрузить данные'
   }
@@ -234,8 +340,8 @@ onMounted(boot)
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f7;
-  color: #1a1a1a;
+  background-color: var(--wn-bg);
+  color: var(--wn-ink);
 }
 
 .app-content {
@@ -261,8 +367,8 @@ onMounted(boot)
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid #d8d8d8;
-  border-top-color: #4caf50;
+  border: 3px solid var(--wn-bg-recessed);
+  border-top-color: var(--wn-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -274,13 +380,13 @@ onMounted(boot)
 }
 
 .boot-text {
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
   margin: 0;
 }
 
 .boot-error {
-  color: #c62828;
+  color: var(--wn-danger);
   font-size: 15px;
   margin: 0;
 }
@@ -289,7 +395,7 @@ onMounted(boot)
   padding: 10px 20px;
   border-radius: 10px;
   border: none;
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -302,7 +408,7 @@ onMounted(boot)
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 13px;
   text-decoration: underline;
   cursor: pointer;
