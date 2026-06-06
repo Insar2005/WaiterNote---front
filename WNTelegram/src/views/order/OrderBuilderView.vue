@@ -516,7 +516,7 @@ watch(
   border: none;
   font-size: 22px;
   line-height: 1;
-  color: var(--wn-ink-soft);
+  color: var(--wn-ink);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -531,7 +531,7 @@ watch(
 .clear-btn {
   background: none;
   border: none;
-  color: #c62828;
+  color: var(--wn-danger);
   font-size: 13px;
   cursor: pointer;
   font-family: inherit;
@@ -556,7 +556,7 @@ watch(
 }
 
 .search-input:focus {
-  border-color: var(--wn-accent-text);
+  border-color: var(--wn-accent);
 }
 
 .search-clear {
@@ -611,7 +611,7 @@ watch(
 .btn-link {
   background: none;
   border: none;
-  color: var(--wn-accent-text);
+  color: var(--wn-accent);
   font-size: 14px;
   font-weight: 500;
   margin-top: 8px;
@@ -664,12 +664,12 @@ watch(
 
 .table-plate--readonly {
   cursor: default;
-  background-color: var(--wn-mint-bg, #e8f5ec);
-  color: var(--wn-mint-ink, #2e7d32);
+  background-color: var(--wn-accent-fill);
+  color: var(--wn-accent-text);
 }
 
 .table-plate--readonly:active {
-  background-color: var(--wn-mint-bg, #e8f5ec);
+  background-color: var(--wn-accent-fill);
 }
 
 .table-plate-icon {
@@ -772,7 +772,7 @@ watch(
 }
 
 .submit-btn:disabled {
-  background-color: #c8e6c9;
+  background-color: color-mix(in srgb, var(--wn-accent) 40%, var(--wn-bg-recessed));
   cursor: not-allowed;
 }
 </style>

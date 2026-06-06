@@ -337,20 +337,39 @@ onMounted(boot)
 
 <style scoped>
 .app-shell {
-  min-height: 100vh;
+  /* Pin to viewport height so the only scroll container in the app is
+     .app-content. When scroll lives on the body / html, navigating from
+     a long page (e.g. Profile) to a fixed-height one (Map) leaves the
+     viewport offset by the previous page's scroll position — the map
+     ends up "rendered too low". With scroll on .app-content, route
+     changes unmount the previous component and its scroll position
+     vanishes naturally. */
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background-color: var(--wn-bg);
   color: var(--wn-ink);
+  overflow: hidden;
 }
 
 .app-content {
   flex: 1;
+  /* Scroll lives here (not on body). Each route's root element starts at
+     scrollTop=0 because the component is fresh — vue-router's
+     scrollBehavior also nudges it to 0 for explicit pushes. */
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
 }
 
 .app-content--full {
   padding-bottom: 0;
+  /* Full-screen routes (map, hall-editor, onboarding) manage their own
+     scrolling internally and use `height: 100dvh` themselves. Disable
+     scroll on the shell to avoid double-scroll surfaces. */
+  overflow: hidden;
 }
 
 .boot {

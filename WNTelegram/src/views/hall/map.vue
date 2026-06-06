@@ -203,8 +203,8 @@ function goToHallEditor() {
   justify-content: space-between;
   gap: 12px;
   padding: 16px 16px 12px 16px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: var(--wn-bg-elevated);
+  border-bottom: 1px solid var(--wn-glass-border-subtle);
   /* Same reasoning as on the canvas: block native scroll for swipes that
      start in this header strip. Buttons inside still receive their clicks. */
   touch-action: none;
@@ -220,23 +220,23 @@ function goToHallEditor() {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .subtitle {
   font-size: 12px;
-  color: #888;
+  color: var(--wn-ink-mute);
 }
 
 .banner {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #fff8e1;
-  border-bottom: 1px solid #ffe0b2;
+  background-color: color-mix(in srgb, var(--wn-warn) 14%, var(--wn-bg-elevated));
+  border-bottom: 1px solid color-mix(in srgb, var(--wn-warn) 32%, var(--wn-bg-elevated));
   padding: 8px 16px;
   font-size: 13px;
-  color: #ef6c00;
+  color: color-mix(in srgb, var(--wn-warn) 70%, var(--wn-ink));
 }
 
 .banner-icon {
@@ -248,7 +248,7 @@ function goToHallEditor() {
 }
 
 .banner-link {
-  color: #ef6c00;
+  color: color-mix(in srgb, var(--wn-warn) 70%, var(--wn-ink));
   text-decoration: underline;
   font-weight: 500;
   margin-left: 4px;
@@ -269,17 +269,17 @@ function goToHallEditor() {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--wn-ink);
 }
 
 .empty-text {
   margin: 0;
-  color: #888;
+  color: var(--wn-ink-mute);
   font-size: 14px;
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--wn-accent);
   color: #fff;
   border: none;
   padding: 10px 20px;

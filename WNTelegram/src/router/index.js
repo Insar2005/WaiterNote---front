@@ -2,6 +2,26 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHashHistory(),
+  /**
+   * Scroll behavior on every navigation.
+   *   - Browser back/forward: restore the saved position (savedPosition is
+   *     set by vue-router automatically for popstate-style navigation).
+   *   - Everything else (push, replace, programmatic): scroll to top.
+   *
+   * We scroll the .app-content element directly because that's where the
+   * scrollbar lives in this app (.app-shell is fixed-height for layout
+   * reasons — see comment in App.vue). Returning {top:0} from this hook
+   * would only nudge window/document, which isn't what scrolls.
+   */
+  scrollBehavior(to, from, savedPosition) {
+    // savedPosition only applies to browser-driven (back/forward) nav,
+    // and is in document coords. We don't try to restore those — most
+    // pages here are stateful (filters, lists) and the user expects the
+    // top of the new screen anyway.
+    const el = document.querySelector('.app-content')
+    if (el) el.scrollTop = 0
+    return savedPosition || { top: 0, left: 0 }
+  },
   routes: [
     {
       path: '/',

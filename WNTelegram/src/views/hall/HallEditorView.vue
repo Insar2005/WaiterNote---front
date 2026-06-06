@@ -535,6 +535,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   background-color: var(--wn-bg);
+  color: var(--wn-ink);
 }
 
 .topbar {
@@ -556,7 +557,7 @@ onUnmounted(() => {
   border: none;
   font-size: 22px;
   line-height: 1;
-  color: var(--wn-ink-soft);
+  color: var(--wn-ink);
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -613,6 +614,10 @@ onUnmounted(() => {
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
+  /* Mirror HallSwitcher: explicit pan-x so native horizontal scroll wins
+     over any ancestor touch-action overrides. */
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
 }
 
 .halls-tabs::-webkit-scrollbar {
@@ -636,14 +641,14 @@ onUnmounted(() => {
 
 .hall-tab--active {
   background-color: var(--wn-accent);
-  border-color: var(--wn-accent-text);
+  border-color: var(--wn-accent);
   color: #fff;
 }
 
 .hall-tab--add {
   border-style: dashed;
-  color: var(--wn-accent-text);
-  border-color: var(--wn-accent-text);
+  color: var(--wn-accent);
+  border-color: var(--wn-accent);
 }
 
 .hall-edit-btn {
@@ -720,7 +725,7 @@ onUnmounted(() => {
   border: none;
   font-size: 26px;
   line-height: 1;
-  box-shadow: 0 4px 14px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--wn-accent) 40%, transparent);
   cursor: pointer;
   z-index: 5;
 }
