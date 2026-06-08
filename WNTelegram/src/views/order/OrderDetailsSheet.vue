@@ -1,8 +1,9 @@
 <template>
-  <transition name="fade">
-    <div v-if="visible" class="overlay" @click.self="$emit('close')">
-      <div class="sheet" role="dialog" aria-modal="true">
-        <header class="sheet-header">
+  <Teleport to="body">
+    <transition name="fade">
+      <div v-if="visible" class="overlay" @click.self="$emit('close')">
+        <div class="sheet" role="dialog" aria-modal="true">
+          <header class="sheet-header">
           <div class="header-main">
             <h3 class="sheet-title">
               <template v-if="liveOrder?.table_number">
@@ -165,6 +166,7 @@
       </div>
     </div>
   </transition>
+  </Teleport>
 </template>
 
 <script setup>
@@ -407,12 +409,14 @@ async function onRemoveItem(item) {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   z-index: 250;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
 }
 
 .sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   background-color: var(--wn-bg-elevated);
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
@@ -422,6 +426,10 @@ async function onRemoveItem(item) {
   display: flex;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
+  /* Pinned to viewport bottom — prevents iOS keyboard from shifting the
+     sheet sideways. Also blocks underlying map gestures from bleeding
+     through: every touch in the sheet's bounding box hits the sheet
+     first, never the SVG below. */
 }
 
 .sheet-header {
@@ -463,6 +471,11 @@ async function onRemoveItem(item) {
   flex: 1;
   overflow-y: auto;
   padding: 12px 20px;
+  /* Restrict to vertical scroll only so iOS doesn't try to interpret a
+     fast vertical swipe as a horizontal one and bleed it through to
+     elements below the sheet (which would otherwise pan the map). */
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .items {
@@ -513,8 +526,8 @@ async function onRemoveItem(item) {
 }
 
 .served-toggle--on {
-  background-color: var(--wn-mint-ink, #2e7d32);
-  border-color: var(--wn-mint-ink, #2e7d32);
+  background-color: var(--wn-accent);
+  border-color: var(--wn-accent);
 }
 
 /* Strike-through served items so a busy waiter can scan progress at a glance. */
@@ -549,7 +562,7 @@ async function onRemoveItem(item) {
 
 .item-comment {
   font-size: 12px;
-  color: #777;
+  color: var(--wn-ink-mute);
   margin-top: 2px;
 }
 
@@ -583,8 +596,8 @@ async function onRemoveItem(item) {
 }
 
 .item-remove:active {
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: color-mix(in srgb, var(--wn-danger) 15%, var(--wn-bg-elevated));
+  color: var(--wn-danger);
 }
 
 .item-remove:disabled {
@@ -637,7 +650,7 @@ async function onRemoveItem(item) {
 .order-comments p {
   margin: 0;
   font-size: 13px;
-  color: var(--wn-ink-soft);
+  color: #333;
   white-space: pre-wrap;
 }
 
@@ -651,7 +664,7 @@ async function onRemoveItem(item) {
 
 .tips-label {
   font-size: 13px;
-  color: var(--wn-ink-soft);
+  color: #555;
   font-weight: 500;
 }
 
@@ -666,7 +679,7 @@ async function onRemoveItem(item) {
   width: 100px;
   padding: 8px 10px;
   font-size: 14px;
-  border: 1px solid var(--wn-glass-border-subtle);
+  border: 1px solid #ddd;
   border-radius: 8px;
   outline: none;
   font-family: inherit;
@@ -675,7 +688,7 @@ async function onRemoveItem(item) {
 }
 
 .tips-input:focus {
-  border-color: var(--wn-accent-text);
+  border-color: #4caf50;
 }
 
 .tips-currency {
@@ -686,7 +699,7 @@ async function onRemoveItem(item) {
 .totals {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid var(--wn-glass-border-subtle);
+  border-top: 1px solid #eee;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -696,12 +709,12 @@ async function onRemoveItem(item) {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: var(--wn-ink-soft);
+  color: #555;
 }
 
 .totals-row--small {
   font-size: 12px;
-  color: #777;
+  color: var(--wn-ink-mute);
 }
 
 .totals-row--main {
@@ -710,7 +723,7 @@ async function onRemoveItem(item) {
   color: var(--wn-ink);
   padding-top: 6px;
   margin-top: 4px;
-  border-top: 1px solid var(--wn-glass-border-subtle);
+  border-top: 1px solid #f0f0f0;
 }
 
 .totals-value {
@@ -721,7 +734,7 @@ async function onRemoveItem(item) {
   display: flex;
   gap: 8px;
   padding: 12px 16px;
-  border-top: 1px solid var(--wn-glass-border-subtle);
+  border-top: 1px solid #f0f0f0;
 }
 
 .btn {
@@ -746,12 +759,12 @@ async function onRemoveItem(item) {
 
 .btn--ghost {
   background-color: var(--wn-bg);
-  color: var(--wn-ink-soft);
+  color: #333;
   flex: 0 0 auto;
 }
 
 .btn--primary {
-  background-color: var(--wn-accent);
+  background-color: #4caf50;
   color: #fff;
 }
 
@@ -768,7 +781,7 @@ async function onRemoveItem(item) {
   text-align: left;
   padding: 10px 4px;
   font-size: 13px;
-  color: var(--wn-ink-soft);
+  color: #555;
   cursor: pointer;
   font-family: inherit;
 }
@@ -778,7 +791,7 @@ async function onRemoveItem(item) {
 }
 
 .more-btn--danger {
-  color: #c62828;
+  color: var(--wn-danger);
 }
 
 .fade-enter-active,
